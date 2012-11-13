@@ -1,0 +1,862 @@
+
+
+
+
+\documentclass[11pt]{article}
+% Default margins are too wide all the way around. I reset them here
+\setlength{\topmargin}{-.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{.125in}
+\setlength{\textwidth}{6.25in}
+
+% Nicer paragraph style
+\setlength{\parskip}{\baselineskip}%
+\setlength{\parindent}{0pt}%
+
+% Font
+%\usepackage[urw-garamond]{mathdesign}
+%\usepackage[T1]{fontenc}
+
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+
+\title{A Comparison Comparison:\\
+\small{for comparing how to compare comparable things}}
+\author{Stephen Wattam}
+\date{\today}
+\maketitle
+
+% Table of contents
+\tableofcontents{}
+\pagebreak
+
+% =============================================================================
+\section{Introduction}
+Comparison of corpora in an intuitive and meaningful manner has long been a problem facing corpus linguistics. The vast size (and, in some cases, complexity of annotation) of modern collections makes manual inspection of even a small fraction impossible, and any complex aggregation methods often rely on top-down imposition of structure or computationally intractable feature extraction.  Methods designed to reduce and summarise corpora %TODO: CITE
+often apply their own bias, either  deliberate or otherwise.
+
+Of prime interest to linguistic inquiry is the relative frequency of tokens in various corpora, and its formal partner, the relative probability that a token is included in a corpus. Various language models exist in order to more accurately determine the latter of these % TODO: CITE baroni's zipf, binomial approx to normal
+, however, many of these require complex fitting stages to tweak their parameters (and produce variable performance even then).
+
+Because of this complexity, comparison of large volumes of text at the token level remains a go-to tool of corpus linguistics. General frequency comparison methods (both for full texts as well as individual word frequencies) provides the linguist with a multitude of ways of exploring text, primarily (to the chagrin of some % TODO: CITE
+) focusing on larger differences, or those on more frequent words.
+
+Throughout the years, many methods for normalising word frequency for comparison have been developed, from within the fields of statistics (in which frequency comparison was its initial concern), psychology, artificial intelligence, information extraction, or linguistics itself.  This paper is an attempt to comprehensively cover these methods, their assumptions, applicability, properties, and application to real-world text in order to assess their suitability for use in comparing corpora in order to describe:
+\begin{enumerate}
+\item Their theoretical limitations (minimum frequencies, distributional assumptions, data format requirements);
+\item Their variance given different real-world text distributions;
+\item Their sensitivity to small but 'text-meaningful' changes (such as phraseology, word order, text type).
+\end{enumerate}
+
+In order for a comparison method to be featured here, it must satisfy the following criteria:
+\begin{enumerate}
+\item It must be non-parametric;
+\item It must be practical to use on large volumes of text (with or without pre-processing);
+\item It must describe notional similarity between two token-frequency lists. % DUH
+\end{enumerate}
+
+Not all of the methods analysed here will be entirely suitable, or intended, for its purpose of comparison.  Some metrics (\textsl{e.g.} Cronbach's $\alpha$) were never designed for the task of comparing token lists, whilst others will be poorly suited to the Zipfian distributions often seen in text.  We have included them for two reasons:
+\begin{itemize}
+\item Some are currently in use by those analysing text, without mention (or presumably consideration) of their failings.  We hope this discussion may lead to adoption of more suitable metrics;
+\item Some exhibit properties and sensitivities that may prove useful as rules-of-thumb or rough guides for further investigation.  We aim to highlight these properties such that those participating in mixed methods research may capitalise upon them.
+\end{itemize}
+
+
+\paragraph{}
+This paper is structured as a simple list of comparison algorithms, in the order, uhh, they are in my notebook. % TODO: make sections and group them as you go.
+(They'll be grouped better later)
+Possible groupings:
+\begin{itemize}
+    \item Rationale (separate PRE from correlation, prediction, agreement, disagreement);
+    \item Field (stats, test/generalisability theory, psychology/psychometrics, information theory);
+    \item Suitability (data type, necessary pre-processing);
+    \item Computational tractability;
+    \item Parsimony when applied to corpora.
+    \item % TODO
+\end{itemize}
+
+
+
+
+\subsection{Notation}
+%CITE: notation both semi-common and taken from http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Falg_crosstabs_somers.htm
+Throughout the paper, we will be using the same formalism to describe frequencies of text in two input corpora, $X$ and $Y$, sorted in ascending order ($X_1 < X_2 < ... < X_R$, accordingly for $Y$).
+
+These will be crosstabulated into $R$ rows and $C$ columns.  $f_{ij}$ represents the value at the $i$th column and $j$th row.  Marginal sums are given by 
+$$ c_j = \sum_{i=1}^{R}f_{ij} $$ for the column total, and $$ r_i = \sum_{j=1}^{C}f_{ij} $$.  The grand sum is represented by $$S = \sum_{i=1}^{R}r_i = \sum_{j=1}^{C}c_i $$
+
+For measures that involve concordant or discordant pairs, the following apply:
+% TODO: move explanation of pairs up here, decide on something better than C, D, T for concordant, Discordant and Ties.
+%Concordant pairs, denoted by $P$ are pairs of values such that % TODO
+
+
+
+%\begin{enumerate}
+%\item As sets of numbers corresponding to ordered token frequency within each corpus.  In this case the total number of unique types is simply the counting measure of the set 
+%    $$n_X = \mu(X)$$
+%, and the total number of tokens its sum: 
+%    $$m_X = \sum_{x \in X}^{} x$$
+%\item As a contingency table formed from the sets $X$ and $Y$ as described above.  The grand sum, 
+%    $$n_{\cdot \cdot} = n_X + n_Y$$ % TODO: should the subscript of N be something else?
+%, with cell totals being defined in terms of their token:
+%    $$ TODO $$ % TODO
+%\end{enumerate}
+
+
+
+
+
+%----
+
+%
+%
+
+% =============================================================================
+\section{Pearson's $\rho$} %name of group of statistics
+\subsection{Description}
+Pearon's $\rho$ is one of the best-known (and oldest) measures of correlation, being devised by Karl Pearson (shortly after Sir Francis Galton's formalism of regression and correlation in the 1880's \cite{galton1888co}) %TODO: find a citation for Pearson's rho.  
+
+It is a measure of correlation between two interval or rational quantites.  Pearson's $\rho$ is known for being sensitive to outliers, nonlinearity, heteroscedacity and anormality.
+
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is the data typically input as a crosstabulation,
+    % or as two parallel lists?
+    Data type & interval \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions & linearity (Bivariate Normal) \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes, but sensitive \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+% How do we compute the statistic?
+$$
+\rho = \frac{Cov(X,Y)}{\sigma_X \sigma_Y}
+$$
+Where $X$ and $Y$ are lists of the same length.
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+$\rho$ is a measure of linear correlation (hence its roots), outputting 1 under conditions of perfect, positive linear association between $X$ and $Y$ (regardless of gradient), and -1 where the relationship is negative.  A value of 0 indicates linear independence.  
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+It's possible to achieve critical values by using permutation tests, bootstrapping, parametric tests using the normal distribution, or the Fisher transformation.
+% =============================================================================
+
+
+
+
+
+
+
+% =============================================================================
+\section{Spearman's Rank $\rho$} %name of group of statistics
+\subsection{Description}
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+Spearman's rank correlation coefficient is equivalent to Pearson's $\rho$ after transforming data into a ranked form.
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions&  monotonicity \\ \hline
+
+    % What types of data may this run on?
+    Data type & ordinal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+% How do we compute the statistic?
+The statistic is computed by assigning ascending rank to replace the values of $X$ and $Y$.  Any tied values are ranked and then reassigned a rank equal to the mean of their ranks: 
+
+$$
+r = \frac{r_1 + r_2}{2}
+$$
+
+Following this, the Pearson's $\rho$ formumla is followed, as above:
+
+$$
+\rho = \frac{Cov(X,Y)}{\sigma_X \sigma_Y}
+$$
+
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+Spearman's $\rho$ is a measure of monotone correlation, outputting 1 where, for any two pairs of values $(X_i, Y_i)$ and $(X_j, Y_j)$, $X_i - X_j$ has the same sign as $Y_i - Y_j$.  It returns a value of -1 where there is no agreement between pair comparisons (and hence a consistent tendency for $Y$ to decrease as $X$ increases).  At a value of 0, there is no trend in $Y$ relative to the value of $X$ (50\% of pairs will have different signs), and the two are independent.
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+Similar to Pearson's measure, one can perform a permutatino test, or use modified Fisher transformation, or a t-test.  See also Page's trend test.
+% =============================================================================
+
+
+
+
+
+
+
+
+
+% =============================================================================
+\section{Kendall's $\tau$} %name of group of statistics
+\label{section:kendalltau}
+\subsection{Description}
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+Kendall's Tau is a measure of rank association, measuring the same quantity as Spearman's $\rho$.  It comes in three forms:
+\begin{enumerate}
+\item $\tau_{a}$---Does not compensate for tied values, requires a square dataset;
+\item $\tau_{b}$---Adjusts for tied values;
+\item $\tau_{c}$---Adjusts for nonsquare input values (but not for ties).
+\end{enumerate}
+Goodman-Kruskal's $\gamma$ is recommended for data with large amounts of tied values.
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions & monotonicity\\ \hline
+
+    % What types of data may this run on?
+    Data type & ordinal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & $\tau_a$, $\tau_b$ only \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+\label{section:kendalltau:formula}
+% How do we compute the statistic?
+The computation of Kendall's $\tau$ is based on the number of concordant pairs of values from $X$ and $Y$:
+$$
+pair = (X_i, Y_i), (X_j, Y_j); i \neq j
+$$
+Concordant pairs, $C$, are such that a comparison between items $i$ and $j$ in the input lists yields the same sign:
+$$
+(X_i > X_j ~~\wedge~~ Y_i > Y_j)
+~~~ \vee ~~~
+(X_i < X_j ~~\wedge~~ Y_i < Y_j)
+$$
+Discordant pairs, $D$, exhibit differing signs.  Ties are counted where
+$$
+X_i = X_j ~~\vee~~ Y_i = Y_j
+$$
+The number of tied values is counted in $t_x$ for $X$, and, rather obviously, $t_y$ for $Y$.
+
+\subsubsection{$\tau_a$}
+$$
+\tau_a = \frac{C-D}{0.5 n (n-1)}
+$$
+
+\subsubsection{$\tau_b$}
+$$
+\tau_b = \frac{C-D}{ \sqrt{(C + D + t_x)(C + D + t_y)}  }
+$$
+{\color{red} some other forms for the denominator might be clearer for this}
+
+\subsubsection{$\tau_c$}
+$$
+\tau_c = \frac{2(C-D)}{n^2} = (C-D) \left( \frac{ 2m }{n^2(m-1)} \right)
+$$
+{\color{red} some other forms for the above might be clearer for this}
+Where $m = min(rows,~cols)$ and $n$ is sample size.
+
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+The interpretation of Kendall's $\tau$ mirrors that of Spearman's rank correlation coefficient, it has value 1 if both rankings are identical, -1 if they are inverted, and 0 if they are independent.  Note that the way I explained the intrepertation of spearman's rank is the same way this is computed.
+
+Values of -1 or 1 may only be achieved for square tables.
+
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+Tau test.
+% =============================================================================
+
+
+
+
+
+
+
+
+% =============================================================================
+\section{Goodman-Kruskal $\gamma$ (G)} %name of group of statistics
+\subsection{Description}
+Goodman-Kruskal's $\gamma$ is simply the difference between concordant and discordant pairs (computed as in Section~\ref{section:kendalltau}).  It is similar to Spearman's $\rho$ and Kendall's $\tau$, and is computed in a very similar manner to the latter.  $\gamma$ ignores ties.
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& monotonicity \\ \hline
+
+    % What types of data may this run on?
+    Data type & ordinal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+% How do we compute the statistic?
+Using definitions of concordant and discordant pairs from Section~\ref{section:kendalltau:formula},
+$$
+\gamma = G = \frac{C-D}{C+D}
+$$
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+$\gamma$ is the surplus of concordant pairs, as a percentage of all pairs.  Consequently, it becomes 1 where all pairs agree, -1 where all pairs disagree in rank, and 0 where there is independence.
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% SEE http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Falg_crosstabs_somers.htm
+% =============================================================================
+
+
+
+
+
+
+% =============================================================================
+\section{Cohen's $\kappa$} %name of group of statistics
+\subsection{Description}
+A measure of inter-annotator agreement between two raters.  It is commonly used in studies where annotators must mark up data in order to establish some measure of reliability for the resulting annotations.
+
+It was introduced in 1960 \cite{cohen1960coefficient}.
+
+Cohen's kappa and Scott's pi differ in terms of how Pr(e) is calculated.  Note similarity also to Fleiss' $\kappa$ % from wikipedia ;-)
+
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions & None (adjustment presumes random selection) \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes {\color{red}?} \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+% How do we compute the statistic?
+$$
+\kappa = \frac{P[a] - P[e]}{1-P[e]} =
+$$
+Where $P[a]$ is the probability of agreement between two observers:
+$$
+P[a] = \frac{ \sum_{i=1}^{R}f_{ii} }{ S }
+$$
+, and $P[e]$ is the hypothetical probability of random agreement, computed as the product of marginals over the grand sum:
+$$
+P[e] = \frac{ c_i r_j }{ S }
+$$
+
+\subsection{Intrepretation}
+\label{section:cohenkappa:interpretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+Cohen's $\kappa$ is an intra-class correlation coefficient, varying from 0 where there is no agreement to 1 where all categories contain identical values.  it is the proportion of agreement after chance agreement ($P[e]$) has been excluded. 
+
+One problem with kappa is that the probability of items being in the wrong category, $P[e]$, is uniform across categories.  This is seldom a safe assumption (especially for human coders, who are more likely to choose similar categories than disparate ones when unsure).
+{\color{red} cover failings in more detail (check kappash2.doc, others) !}
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+Rules of thumb are often used for $\kappa$, and it is possible to compute significance values, but they are seldom reliable due to factors discussed in Section~\ref{section:cohenkappa:interpretation}.
+% =============================================================================
+
+
+
+
+
+% =============================================================================
+%  TODO VVVVVVVVVVVVVVVV
+\section{Fleiss' $\kappa$} %name of group of statistics
+\subsection{Description}
+A generalisation of Scott's pi statistic %CITE: (Scott, W. (1955) pp. 321–325)
+.  Measures inter-annotator agreement (similarly to Cohen's $\kappa$) between two or more raters.
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & 8 \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & 8 \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
+
+
+
+% Proportional reduction in error
+\section{$\lambda$}
+Asymmetric and symmetric forms available.  Varied between 0 and 1, and is a measure of predictive capacity.  Suitable for nominal data.  Is a measure of proportional increase in predictive accuracy, as is Goodman and Kruskal's $\tau$ and the Theil's U (uncertainty coefficient).
+
+
+
+
+
+\section{Theil's $U$ (Uncertainty Coefficient)}
+Available in both symmetric and asymmetric forms.  Measures reduction in error when the independent variable is used to measure the dependent.  Suitable for nominal data (can be applied to continuous using density estimation).  Based on the concept of information entropy, and is essentially a normalised form of Mutual Information---thus useful for assessing information based systems like clustering algorithms.  Unlike $\lambda$, considers whole distribution rather than simply the mode.
+
+
+
+
+\section{Goodman \& Kruskal's $\tau$}
+Measures proportional reduction in error, as the two above do.  Used for nominal data. Sensitive to margin differences.  Asymmetric (as with the other PRE statistics).  Produces the same results as $\phi^2$ for 2x2 tables.  Ranges from 0-1, 0 being unassociated, 1 being entirely associated.  Introduced in 1954~\cite{goodman1954measures}.
+According to Goodman and Kruskal (1954) it can be interpreted as the ``relative decrease in the proportion of incorrect predictions when we go from predicting the row category based only on the row marginal probabilities (as in Lambda) to predicting the row category based on the conditional proportions of both row and column.''
+
+
+
+\section{Kullback-Leibler Divergence}
+Asymmetric.  Measures the difference between two probability distributions in terms of the extra information in the depdenent one.  Computed from Fisher information.  
+
+In the discrete case:
+$$
+D_{KL}(Y|X) = \sum_{i=1}^{C}{ \ln \left( \frac{X_i}{Y_i} \right) } X_i
+$$
+Where $C$ is, as in the Notation section, the length of $X$.
+
+
+
+\section{Somers' d}
+Somers' d comes in both asymmetric and symmetric forms.  Suitable for ordinal data.  Ranges from -1 to 1, -1 being a negative relationship.  The asymmetric one is an extension of gamma, differing only in the inclusion of the number of pairs not tied on the independent variable.
+
+
+
+
+\section{$\eta$}
+Ranging from 0-1, 0 being no association.  Appropriate for 'nominal by interval' data, that is dependent measured on interval scale, independent on nominal scale (works for both interval, of course, too).  This would seem to apply well to word frequencies.
+% from http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Fidh_xtab_statistics.htm
+% Two eta values are computed: one treats the row variable as the interval variable, and the other treats the column variable as the interval variable.
+
+
+
+
+\section{Pearson $\chi^2$}
+Mention $\phi$ and Cram\'er's $V$, and the Contingency coefficient (based on chi-square).  Suitable for use on nominal data.  Unsuitable for low-frequency counts.
+
+The test statistic is normally defined in terms of observed and expected frequencies, typically computed from marginals:
+$$
+\chi^2 = \sum_{i=1}^R{  \sum_{j=1}^C{ \frac{ (f_{ij} - \mathbb{E}_{ij} )^2 }{ \mathbb{E}_{ij} } } }
+$$
+where $\mathbb{E}$ for cell $(i,j)$ is computed as:
+$$
+\mathbb{E}_{ij} = \frac{ c_{i \cdot} r_{\cdot j} }{ S }
+$$
+
+
+\section{$\phi$, (Matthews Correlation Coefficient)}
+\label{section:phi}
+An attempt to remove effects of sample size from $\chi^2$.  Symmetric. Suitable for use on nominal data (due to chisq link). % CITE PPT file (https://docs.google.com/viewer?a=v&q=cache:ZZMuGFKtHVUJ:www.stanford.edu/class/archive/anthsci/anthsci192/anthsci192.1064/handouts/6%2520contingency%2520tables.ppt+&hl=en&gl=uk&pid=bl&srcid=ADGEESiGTqYGMt9IpeVbC4volI_SsuNVvjvaf1lZ0vKM1jomiVOtr4D6gacKD-l_AV9ClME6xulbFlmUOlsz_Ptmh_h1WDUxTYGitB66xgaEzkes9g3pR44dY0_RLhVYHMzDCYbPGUjW&sig=AHIEtbRRr2n4NXo1muTnJsJmN5BWw_W5-g)
+Ranges from 0-1 for 2x2 tables, with no upper limit for larger ones.  Identical in concept to to Pearson's $\rho$ {\color{red} Does this \textbf{always} output the same result?}.
+
+Mathews' correlation coefficient was designed for use with classifiers' confusion matrices, and is essentially the same form expressed in terms of classifier output (accuracy, precision, recall \textsl{etc.}). 
+$$
+\phi = \sqrt{ \frac{\chi^2}{S} }
+$$
+
+
+
+
+\section{Cram\'er's $V$}
+A standardisation of $\phi^2$.  Ranges from 0 to 1, 0 being no association, 1 being complete.  Identical to Tschuprow's T for square tables.  Cram\'er's $V$ doesn't require a square table.  Suitable for use on nominal data (due to chisq link).
+$$
+V = \sqrt{ \frac{ \chi^2 }{ S( m - 1 )} }
+$$
+Where $m$ is the smaller of the two table dimensions, $min(R, C)$  (and $S$ is my convention, the number of cases/grand sum).
+
+
+
+
+\section{Contingency Coefficient}
+Another statistic that corrects $\chi^2$ for non-2x2 table sizes.  As such it's used on nominal data.  Maximum value depends on the size of the table, being 0.707 for 2x2 tables, 0.87 for a 4x4 table etc.  
+$$
+CC = \sqrt{ \frac{ \chi^2 }{ \chi^2 + S } }
+$$
+
+
+
+
+\section{Odds Ratio}
+\label{section:oddsratio}
+A measure of an increase in $Y$ given an increase in $X$. % TODO: find original explanation
+Usually computed only for 2x2 tables, it's possible to extend odds ratio computations by generating many 2x2 contingency tables (category $k$ vs. not category $k$).  Suitablke for nominal data.  % http://www.john-uebersax.com/stat/odds.htm#extens loglinear association recommended instead in multi-category case
+Log odds most often used instead, making for simple confidence interval computations..
+
+
+
+
+\section{Yule's $Q$}
+This is a normalisation of the odds ratio in Section~\ref{section:oddsratio} to vary between -1 and 1.
+$$
+Q = \frac{OR - 1}{OR + 1}
+$$
+Where $OR$ is the odds ratio (see Section~\ref{section:oddsratio}) of the data.
+
+
+
+
+\section{Cronbach's $\alpha$}
+Commonly used as a measure of reliability/`internal consistency' of psychometric tests.  First named $\alpha$ in 1951, and is an extension of the Kuder-Richardson Formula 20, an equivalent measure for binary data.  Related to the Spearman-Brown prediction formula, and factor analysis.  Varies from 0 to 1, though according to Ritter~\cite{ritter2010understanding}, can vary below 0~in some circumstances {\color{red} (which?)}.
+
+
+
+
+\section{Tschuprow's $T$}
+For nominal data.  Range between 0 and 1, 0 where no association, 1 where full association.  Can only achieve 1 for square tables. Identical to Cram\'er's $V$ for square tables.  Based on $\phi^2$.
+$$
+T = \sqrt{ \frac{ \phi^2 }{ \sqrt{ (R-1)(C-1) } } }
+$$
+Where 
+$$
+\phi^2 = \frac{\chi^2}{n}
+$$
+as in Section~\ref{section:phi}
+
+
+
+
+\section{$F_\beta$-score}
+Applicable as classifier output, hence binary data (confusion matrix).  May be extended by applying in turn to each category, as with other methods here.  Represents the capacity of the independent variable as a predictor of the dependent.  May be weighted (by changing $\beta$) to change importance of precision or recall.
+
+
+
+
+\section{Mann-Whitney $U$}
+Used for hypothesis testing.  Large samples see $U$ to be normally distributed.  Equivalent to Kendall's $\tau$ where one variable is binary.  
+
+
+
+
+\section{Kolmogorov-Smirnov}
+Used to compare frequency distributions.
+
+
+
+
+\section{Likelihood Ratio}
+Suitable for use on nominal data.
+
+
+
+
+\section{Cosine Similarity}
+A measure of angular similarity using a vector space model.  Often used in data/text mining.  Ranges from -1 to 0.  Known in biology by the names ``Ochai coefficient'' or ``Ochiai-Barkman coefficient''.
+
+May be computed using the euclidean dot product of two vectors.  See also euclidean distance, Manhattan distance below (Sections~\ref{section:euclid}\ref{section:manhattan} respectively).
+
+
+
+
+% Set based methods
+\section{Sorensen Similarity Index}
+Based on sampling the same population.  Works for binary data (inclusion or lack thereof in $X$ and $Y$)
+
+\section{Jaccard Index}
+Works for binary data (inclusion or lack thereof in $X$ and $Y$).
+
+
+
+% Distances
+\section{Percentage Score Difference}
+The percentage of an entry in $X$, minus the percentage of an entry in $Y$.  Asymmetric unless the sign is deliberately discarded {\color{red} is this done often?}.
+
+\section{Euclidean Distance}
+\label{section:euclid}
+The distance between two points in vector-space as travelled directly.  
+
+%Varies between 0 (full agreement) and $\sum{X} + \sum{Y}$ (total difference). Is often {\color{red} check!} normalised by discarding the sign.
+%$$
+%D_{E}(Y|X) = \sum_{i=1}^{i < C}{ Y_i - X_i }
+%$$
+%Where $C$ is the number of items in $X$, as per Notation above.
+
+
+
+
+\section{Manhattan/Taxicab Distance}
+\label{section:manhattan}
+Also known as squared Euclidiean distance, for obvious reasons.  Equivalent to travelling between two points in vector space by moving only orthogonal to axes, in two dimensions this looks like the route a taxi would take around a grid system.
+
+
+
+
+\section{Tversky Index}
+Generalised form of Tanimoto and Dice coefficients used in information retrieval.
+
+
+
+\section{Cochran's Statistic}
+See Section \ref{section:mantelhaenszel}.  Cochran's statistic is merely an uncorrected form.
+
+\section{Mantel-Haenszel}
+\label{section:mantelhaenszel}
+Tests conditional independence of two binary values, controlling for one or more categorical variables.  Requires ordinal data.  Based on odds ratios.  First defined in 1959 {\color{red} (though the only refernece I have thus far is from '04...)}~\cite{mantel2004statistical}.  Computed once after each 2x2 group (for $k$ groups) has itself been computed.
+
+Mantel-Haenszel's statistic is a corrected form of Cochran's, with small-sample correction and inflation of variance.
+
+
+\section{Kilgarriff's `Simple Maths'}
+Some kind of mashed frequency-normalised odds ratio, I guess.
+
+
+% =============================================================================
+%                               <template>
+% =============================================================================
+\section{Template} %name of group of statistics
+\subsection{Description}
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal, ordinal, interval, ratio \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & 8 \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & 8 \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
+
+
+
+\section{Deliberate Omissions}
+Some methods were omitted from the above list, yet still warrant a mention due to their relation to the above.  They are presented here primarily for justification as to their unsuitability:
+\begin{itemize}
+    \item \textbf{Fisher's exact test}---This test for independence is closely related to $\chi^2$, but is suitable only for 2x2 tables.
+    \item \textbf{Hamming Distance}---Is unsuitable for use on frequency lists due to its requirement that data be ordered meaningfully.
+    \item \textbf{SimRank}---Requires a graph model of many corpora to be of any use.  Might be applicable if considering texts within a corpus.
+    \item \textbf{Linear-by-Linear}---Requires ordinal data
+    %\item \textbf{}---
+    % \item Mcnemar's test, for binary response, could be extended though.  Is this just another way of computing chi-sq statistics?  Used in the Transmission disequilibrium test in genetics.
+\end{itemize}
+
+
+
+
+% 'The needless assumption of normality in Pearson's r' http://psycnet.apa.org/journals/amp/12/10/623/
+
+
+% =============================================================================
+% =============================================================================
+% =============================================================================
+
+% =============================================================================
+\bibliography{comparison}
+\bibliographystyle{plain}
+\end{document}

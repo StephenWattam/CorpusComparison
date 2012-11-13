@@ -1,0 +1,10 @@
+Kilgarriff's presentation of corpus comparison and inspection techniques 
+introduced some thoroughly nonstatistical measures of similarity.
+
+Compare his methods to other ways of examining word frequency, and analyse the
+differences, advantages and disadvantages.
+
+It's especially worth testing things such as:
+ *) frequency variance
+ *) distributional variance
+ *) sensitivity to linearity
