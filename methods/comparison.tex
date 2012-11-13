@@ -89,7 +89,21 @@ Throughout the paper, we will be using the same formalism to describe frequencie
 These will be crosstabulated into $R$ rows and $C$ columns.  $f_{ij}$ represents the value at the $i$th column and $j$th row.  Marginal sums are given by 
 $$ c_j = \sum_{i=1}^{R}f_{ij} $$ for the column total, and $$ r_i = \sum_{j=1}^{C}f_{ij} $$.  The grand sum is represented by $$S = \sum_{i=1}^{R}r_i = \sum_{j=1}^{C}c_i $$
 
-For measures that involve concordant or discordant pairs, the following apply:
+For measures that involve concordant or discordant pairs, they are defined as follows:
+$$
+pair = (X_i, Y_i), (X_j, Y_j); i \neq j
+$$
+Concordant pairs, $Q$, are such that a comparison between items $i$ and $j$ in the input lists yields the same sign:
+$$
+(X_i > X_j ~~\wedge~~ Y_i > Y_j)
+~~~ \vee ~~~
+(X_i < X_j ~~\wedge~~ Y_i < Y_j)
+$$
+Discordant pairs, $P$, exhibit differing signs.  Ties are counted where
+$$
+X_i = X_j ~~\vee~~ Y_i = Y_j
+$$
+The number of tied values is counted in $t_x$ for $X$, and, rather obviously, $t_y$ for $Y$.
 % TODO: move explanation of pairs up here, decide on something better than C, D, T for concordant, Discordant and Ties.
 %Concordant pairs, denoted by $P$ are pairs of values such that % TODO
 
@@ -112,11 +126,18 @@ For measures that involve concordant or discordant pairs, the following apply:
 
 %----
 
+\subsection{Taxonomy}
+Various methods of organising the methods in this paper prove both rational and useful; rather than organise the paper in one manner, denying those readers wishing to peruse it in others, we present a number of available taxonomies here for review.
+
+% TODO
+
+
 %
 %
 
 % =============================================================================
 \section{Pearson's $\rho$} %name of group of statistics
+\label{section:pearsonrho}
 \subsection{Description}
 Pearon's $\rho$ is one of the best-known (and oldest) measures of correlation, being devised by Karl Pearson (shortly after Sir Francis Galton's formalism of regression and correlation in the 1880's \cite{galton1888co}) %TODO: find a citation for Pearson's rho.  
 
@@ -227,14 +248,9 @@ Spearman's rank correlation coefficient is equivalent to Pearson's $\rho$ after 
 The statistic is computed by assigning ascending rank to replace the values of $X$ and $Y$.  Any tied values are ranked and then reassigned a rank equal to the mean of their ranks: 
 
 $$
-r = \frac{r_1 + r_2}{2}
+\rho_s = \frac{\rho_{p_X} + \rho_{p_Y}}{2}
 $$
-
-Following this, the Pearson's $\rho$ formumla is followed, as above:
-
-$$
-\rho = \frac{Cov(X,Y)}{\sigma_X \sigma_Y}
-$$
+Where $\rho_{p_i}$ is Pearson's $\rho$ of rank list $i$ (computed as in Section~\ref{section:pearsonrho}).
 
 
 \subsection{Intrepretation}
@@ -308,38 +324,26 @@ Goodman-Kruskal's $\gamma$ is recommended for data with large amounts of tied va
 \label{section:kendalltau:formula}
 % How do we compute the statistic?
 The computation of Kendall's $\tau$ is based on the number of concordant pairs of values from $X$ and $Y$:
-$$
-pair = (X_i, Y_i), (X_j, Y_j); i \neq j
-$$
-Concordant pairs, $C$, are such that a comparison between items $i$ and $j$ in the input lists yields the same sign:
-$$
-(X_i > X_j ~~\wedge~~ Y_i > Y_j)
-~~~ \vee ~~~
-(X_i < X_j ~~\wedge~~ Y_i < Y_j)
-$$
-Discordant pairs, $D$, exhibit differing signs.  Ties are counted where
-$$
-X_i = X_j ~~\vee~~ Y_i = Y_j
-$$
-The number of tied values is counted in $t_x$ for $X$, and, rather obviously, $t_y$ for $Y$.
 
 \subsubsection{$\tau_a$}
 $$
-\tau_a = \frac{C-D}{0.5 n (n-1)}
+\tau_a = \frac{Q-P}{0.5 n (n-1)}
 $$
 
 \subsubsection{$\tau_b$}
 $$
-\tau_b = \frac{C-D}{ \sqrt{(C + D + t_x)(C + D + t_y)}  }
+\tau_b = \frac{Q-P}{ \sqrt{(Q + P + t_x)(Q + P + t_y)}  }
 $$
 {\color{red} some other forms for the denominator might be clearer for this}
 
-\subsubsection{$\tau_c$}
+\subsubsection{Stuart's $\tau_c$}
+% http://v8doc.sas.com/sashtml/stat/chap28/sect20.htm has a slightly different formula, I think.
+% TODO: check this.
 $$
-\tau_c = \frac{2(C-D)}{n^2} = (C-D) \left( \frac{ 2m }{n^2(m-1)} \right)
+\tau_c = \frac{2(Q-P)}{n^2} = (Q-P) \left( \frac{ 2m }{n^2(m-1)} \right)
 $$
 {\color{red} some other forms for the above might be clearer for this}
-Where $m = min(rows,~cols)$ and $n$ is sample size.
+Where $m = \min(R,~C)$ and $n$ is sample size.
 
 
 \subsection{Intrepretation}
@@ -369,7 +373,7 @@ Tau test.
 % =============================================================================
 \section{Goodman-Kruskal $\gamma$ (G)} %name of group of statistics
 \subsection{Description}
-Goodman-Kruskal's $\gamma$ is simply the difference between concordant and discordant pairs (computed as in Section~\ref{section:kendalltau}).  It is similar to Spearman's $\rho$ and Kendall's $\tau$, and is computed in a very similar manner to the latter.  $\gamma$ ignores ties.
+Goodman-Kruskal's $\gamma$ is simply the difference between concordant and discordant pairs (computed as in Section~\ref{section:kendalltau}).  It is similar to Spearman's $\rho$ and Kendall's $\tau$, and is computed in a very similar manner to the latter.  $\gamma$ ignores ties.  Reduces to Yule's $Q$ for $2 \times 2$ tables.
 % Describe the rationale behind the measure:
 %  1) Who developed it, when?
 %  2) Why? What field was it originally developed for?
@@ -408,7 +412,7 @@ Goodman-Kruskal's $\gamma$ is simply the difference between concordant and disco
 % How do we compute the statistic?
 Using definitions of concordant and discordant pairs from Section~\ref{section:kendalltau:formula},
 $$
-\gamma = G = \frac{C-D}{C+D}
+\gamma = G = \frac{Q-P}{Q+P}
 $$
 
 \subsection{Intrepretation}
@@ -511,10 +515,19 @@ Rules of thumb are often used for $\kappa$, and it is possible to compute signif
 
 % =============================================================================
 %  TODO VVVVVVVVVVVVVVVV
+%  http://en.wikibooks.org/wiki/Algorithm_Implementation/Statistics/Fleiss'_kappa
 \section{Fleiss' $\kappa$} %name of group of statistics
 \subsection{Description}
 A generalisation of Scott's pi statistic %CITE: (Scott, W. (1955) pp. 321–325)
 .  Measures inter-annotator agreement (similarly to Cohen's $\kappa$) between two or more raters.
+
+Widely used in psychology.
+
+\cite{fleiss1971measuring}
+
+%'Wikipedia: Fleiss' kappa specifically assumes that although there are a fixed number of raters (e.g., three), different items are rated by different individuals (Fleiss, 1971, p.378). That is, Item 1 is rated by Raters A, B, and C; but Item 2 could be rated by Raters D, E, and F.'
+% http://www.statsdirect.com/help/agreement/kappa.htm
+
 % Describe the rationale behind the measure:
 %  1) Who developed it, when?
 %  2) Why? What field was it originally developed for?
@@ -536,13 +549,13 @@ A generalisation of Scott's pi statistic %CITE: (Scott, W. (1955) pp. 321–325)
     Data type & nominal \\ \hline
 
     % Is the method suitable for small frequencies?
-    Low Frequency & 8 \\ \hline
+    Low Frequency & ? \\ \hline
 
     % Is the method suitable for nonsquare comparisons?
-    Squareness Assumptions & 8 \\ \hline
+    Squareness Assumptions & No \\ \hline
     
     % Is the method symmetric?
-    Symmetry? & Yes \\ \hline
+    Symmetry? & ? \\ \hline
 
     % Finally, any other assumptions
     % x & x \\ \hline
@@ -551,12 +564,38 @@ A generalisation of Scott's pi statistic %CITE: (Scott, W. (1955) pp. 321–325)
 
 \subsection{Formula}
 % How do we compute the statistic?
+$\kappa$ is defined in terms of the degree of agreement observed divided by the agreement possible by chance.
+$$
+\kappa_F = \frac{ \bar{P} - \bar{P_e} }{ 1 - \bar{P_e} }
+$$
+
+Partially, in terms of $p_j$, the proportion of entries that fall in column $j$
+$$
+p_j = \frac{ c_j }{S}
+$$
+
+$\bar{P_e}$ is computed as the sum of column marginals $p_j$, squared:
+$$
+\bar{P_e} = \sum_{j=0}^{C}{ p_j^2 }
+$$
+
+$P_i$ is the extent to which annotators agree across all columns (for row $i$):
+$$
+P_i = \frac{ 1 }{ n(n-1) }   \left( \sum_{j=1}^{C}{ f_{ij}^2 }  - n \right)
+$$
+
+Lastly, $\bar{P}$ is the mean of $P_i$:
+$$
+\bar{P} = \frac{ 1 }{ R }    \sum_{i=1}^{R}{ P_i }
+$$
+
 
 \subsection{Intrepretation}
 % How to intrepret the output: what does it mean?
 %  1) What range of values does it output?
 %  2) In what circumstances does/can it hit extremis?
 %  3) What does the number mean re. the data?
+'It can be interpreted as expressing the extent to which the observed amount of agreement among raters exceeds what would be expected if all raters made their ratings completely randomly.' [wikipedia!]
 
 \subsection{Critical Values}
 % Is it possible to find critical values for this measure?
@@ -567,15 +606,59 @@ A generalisation of Scott's pi statistic %CITE: (Scott, W. (1955) pp. 321–325)
 
 
 % Proportional reduction in error
-\section{$\lambda$}
-Asymmetric and symmetric forms available.  Varied between 0 and 1, and is a measure of predictive capacity.  Suitable for nominal data.  Is a measure of proportional increase in predictive accuracy, as is Goodman and Kruskal's $\tau$ and the Theil's U (uncertainty coefficient).
+\section{Goodman \& Kruskal's $\lambda$}
+Asymmetric and symmetric forms available.  Varied between 0 and 1, and is a measure of predictive capacity.  Suitable for nominal data.  Is a measure of proportional increase in predictive accuracy, as is Goodman and Kruskal's $\tau$ and the Theil's U (uncertainty coefficient).  Note that $\lambda$ suffers from uniqueness assumptions in establishing the mode.  There seems to be no single method to escape these, but check (TODO)
 
+% SEE: http://vassarstats.net/lamexp.html FOR AN AMAZING EXPLANATION!
+Asymmetric (with $Y$ as the dependent variable):
+$$
+\lambda(Y|X) = \frac{ \varepsilon_1 - \varepsilon_2 }{ \varepsilon_1 }
+$$
+Where $\varepsilon_1$ is the sum of marginal frequencies for each row (independent, $X$) minus the sum of the row with the modal frequency, $r_{mode}$:
+$$
+\varepsilon_1 = \sum_{i=0, i \neq mode}^{R}{ r_i }
+$$
+and $\varepsilon_2$ is the sum of all modal row categories (for which $f_{ij}$ is greatest) in each row:
+$$
+\varepsilon_2 = \sum_{i=0}^{R}{ \max( f_{i\cdot} ) }
+$$
 
-
+Symmetric (the average of two symmetric lambdas):
+% Find formula from http://v8doc.sas.com/sashtml/stat/chap28/sect20.htm
+$$
+\lambda = \frac{ \lambda(Y|X) + \lambda(X|Y) }{ 2 }
+$$
 
 
 \section{Theil's $U$ (Uncertainty Coefficient)}
-Available in both symmetric and asymmetric forms.  Measures reduction in error when the independent variable is used to measure the dependent.  Suitable for nominal data (can be applied to continuous using density estimation).  Based on the concept of information entropy, and is essentially a normalised form of Mutual Information---thus useful for assessing information based systems like clustering algorithms.  Unlike $\lambda$, considers whole distribution rather than simply the mode.
+Available in both symmetric and asymmetric forms.  Measures reduction in error when the independent variable is used to measure the dependent.  Suitable for nominal data (can be applied to continuous using density estimation).  Based on the concept of information entropy, and is essentially a normalised form of Mutual Information---thus useful for assessing information based systems like clustering algorithms.  Unlike $\lambda$, considers whole distribution rather than simply the mode.  Used for evaluating the quality of classifiers.  Ranges from 0 to 1.
+
+% http://v8doc.sas.com/sashtml/stat/chap28/sect20.htm
+Both forms of the Uncertainty coefficient are defined in terms of the entropy of their lists, $H$, and their conditional probabilities.  For rows:
+$$
+H(X) = -\sum_{i=1}^{R}{ \left[ \frac{ r_i }{ S }       \ln \left( \frac{ r_i }{ S } \right) \right] }
+$$
+accordingly for columns:
+$$
+H(Y) = -\sum_{j=1}^{C}{ \left[ \frac{ c_j }{ S }       \ln \left( \frac{ c_j }{ S } \right) \right] }
+$$
+And for joint entropy:
+$$
+H(XY) = -\sum_{i=1}^{R}{  \sum_{j=1}^{C}{ \left[    \frac{ f_{ij} }{S}  \ln \left( \frac{ f_{ij} }{ S } \right)     \right] } }
+$$
+
+\subsubsection{Asymmetric}
+(with $Y$ as the dependent):
+$$
+U(Y|X) = \frac{ H(X) + H(Y) - H(XY) }{ H(Y) }
+$$
+
+\subsubsection{Symmetric}
+% NB: this is a simplification of two of the above, with the denominators summed too.
+$$
+U = 2 \left[ \frac{ H(X) + H(Y) - H(XY) }{ H(X) + H(Y) } \right]
+$$
+
 
 
 
@@ -597,8 +680,40 @@ Where $C$ is, as in the Notation section, the length of $X$.
 
 
 
-\section{Somers' d}
-Somers' d comes in both asymmetric and symmetric forms.  Suitable for ordinal data.  Ranges from -1 to 1, -1 being a negative relationship.  The asymmetric one is an extension of gamma, differing only in the inclusion of the number of pairs not tied on the independent variable.
+\section{Somers' $D$}
+Somers' $D$ comes in both asymmetric and symmetric forms.  Suitable for ordinal data.  Ranges from -1 to 1, -1 being a negative relationship.  The asymmetric one is an extension of gamma, differing only in the inclusion of the number of pairs not tied on the independent variable.  Somers's $D$ is an asymmetric modification of $\tau_b$ (note: the paper mentioned below says that it is defined in terms of $\tau_a$, see below), in that it only corrects for pairs on the independent variable.  Appropriate only for when both variables are ordinal.  Related to Harrell's c index (Harrell \textsl{et al.} 1982/1996) as $D = 2c - 1$.
+
+
+
+
+% http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Falg_crosstabs_somers.htm
+Where $M_X$ is the number of possible pairs for the variable $X$, \textsl{i.e.} concordant pairs, discordant pairs, and pairs on which the variable is tied:
+$$
+M_X = S^2 - \sum_{i=0}^{R}{r_i^2}
+$$
+Likewise, $M_Y$ is the same, only for columns.
+
+
+\subsubsection{Asymmetric}
+Somers' $D$ is defined in terms of concordant and discordant pairs, as with Kendall's $\tau$:
+% D(Y|X) = \frac{ P - Q }{ (n^2 - \sum_{i=1}^{R}{ n_i^2 } ) }
+$$
+D(Y|X) = \frac{ P - Q }{ M_X }
+$$
+
+
+%\texttt{https://docs.google.com/viewer?a=v&q=cache:RVD2zhacPJMJ:www.imperial.ac.uk/nhli/r.newson/papers/somdext.pdf+&hl=en&gl=uk&pid=bl&srcid=ADGEESgAmhjzsbGNYWUcjbYWdVnIPBQg_IZTECjKewPCXxX5FpqKfJlAsrIIcFLINoIzLt2fENvkhkaTeezPAo33fiu5rKkGz7MMc3wsuL1MAQqxFcyBxBCg4K_KxR_afvYv_CTZ_NiY&sig=AHIEtbTWDn1bC55Nz4eMfpipQuPTfe3hnw} 
+The paper mentioned in the source above this line also defines it in terms of Kendall's $\tau_a$:
+$$
+D(Y|X) = \frac{ \tau_a(XY) }{  \tau_a(XX) }
+$$
+
+\subsubsection{Symmetric}
+$$
+D = \frac{ P - Q }{ \frac{1}{2}( M_X + M_Y ) }
+$$
+
+
 
 
 
@@ -676,7 +791,7 @@ Where $OR$ is the odds ratio (see Section~\ref{section:oddsratio}) of the data.
 
 
 \section{Cronbach's $\alpha$}
-Commonly used as a measure of reliability/`internal consistency' of psychometric tests.  First named $\alpha$ in 1951, and is an extension of the Kuder-Richardson Formula 20, an equivalent measure for binary data.  Related to the Spearman-Brown prediction formula, and factor analysis.  Varies from 0 to 1, though according to Ritter~\cite{ritter2010understanding}, can vary below 0~in some circumstances {\color{red} (which?)}.
+Commonly used as a measure of reliability/`internal consistency' of psychometric tests.  First named $\alpha$ in 1951, and is an extension of the Kuder-Richardson Formula 20, an equivalent measure for binary data( \textsl{i.e.} $2\times 2$ tables).  Related to the Spearman-Brown prediction formula, and factor analysis.  Varies from 0 to 1, though according to Ritter~\cite{ritter2010understanding}, can vary below 0~in some circumstances {\color{red} (which?)}.
 
 
 
@@ -731,6 +846,8 @@ May be computed using the euclidean dot product of two vectors.  See also euclid
 \section{Sorensen Similarity Index}
 Based on sampling the same population.  Works for binary data (inclusion or lack thereof in $X$ and $Y$)
 
+
+
 \section{Jaccard Index}
 Works for binary data (inclusion or lack thereof in $X$ and $Y$).
 
@@ -773,6 +890,10 @@ See Section \ref{section:mantelhaenszel}.  Cochran's statistic is merely an unco
 Tests conditional independence of two binary values, controlling for one or more categorical variables.  Requires ordinal data.  Based on odds ratios.  First defined in 1959 {\color{red} (though the only refernece I have thus far is from '04...)}~\cite{mantel2004statistical}.  Computed once after each 2x2 group (for $k$ groups) has itself been computed.
 
 Mantel-Haenszel's statistic is a corrected form of Cochran's, with small-sample correction and inflation of variance.
+
+
+\section{Fisher's Exact Test}
+Only usable on 2 $\times$ 2 matrices (may be repeated with $k$ categories as with other methods with this restriction.)
 
 
 \section{Kilgarriff's `Simple Maths'}
@@ -838,7 +959,6 @@ Some kind of mashed frequency-normalised odds ratio, I guess.
 \section{Deliberate Omissions}
 Some methods were omitted from the above list, yet still warrant a mention due to their relation to the above.  They are presented here primarily for justification as to their unsuitability:
 \begin{itemize}
-    \item \textbf{Fisher's exact test}---This test for independence is closely related to $\chi^2$, but is suitable only for 2x2 tables.
     \item \textbf{Hamming Distance}---Is unsuitable for use on frequency lists due to its requirement that data be ordered meaningfully.
     \item \textbf{SimRank}---Requires a graph model of many corpora to be of any use.  Might be applicable if considering texts within a corpus.
     \item \textbf{Linear-by-Linear}---Requires ordinal data
