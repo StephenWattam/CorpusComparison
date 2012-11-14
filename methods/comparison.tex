@@ -103,7 +103,7 @@ Discordant pairs, $P$, exhibit differing signs.  Ties are counted where
 $$
 X_i = X_j ~~\vee~~ Y_i = Y_j
 $$
-The number of tied values is counted in $t_x$ for $X$, and, rather obviously, $t_y$ for $Y$.
+The number of tied values is counted in $t_X$ for $X$, and, rather obviously, $t_Y$ for $Y$.
 % TODO: move explanation of pairs up here, decide on something better than C, D, T for concordant, Discordant and Ties.
 %Concordant pairs, denoted by $P$ are pairs of values such that % TODO
 
@@ -610,7 +610,8 @@ $$
 Asymmetric and symmetric forms available.  Varied between 0 and 1, and is a measure of predictive capacity.  Suitable for nominal data.  Is a measure of proportional increase in predictive accuracy, as is Goodman and Kruskal's $\tau$ and the Theil's U (uncertainty coefficient).  Note that $\lambda$ suffers from uniqueness assumptions in establishing the mode.  There seems to be no single method to escape these, but check (TODO)
 
 % SEE: http://vassarstats.net/lamexp.html FOR AN AMAZING EXPLANATION!
-Asymmetric (with $Y$ as the dependent variable):
+\subsubsection{Asymmetric}
+(with $Y$ as the dependent variable):
 $$
 \lambda(Y|X) = \frac{ \varepsilon_1 - \varepsilon_2 }{ \varepsilon_1 }
 $$
@@ -623,7 +624,8 @@ $$
 \varepsilon_2 = \sum_{i=0}^{R}{ \max( f_{i\cdot} ) }
 $$
 
-Symmetric (the average of two symmetric lambdas):
+\subsubsection{Symmetric}
+the average of two asymmetric lambdas:
 % Find formula from http://v8doc.sas.com/sashtml/stat/chap28/sect20.htm
 $$
 \lambda = \frac{ \lambda(Y|X) + \lambda(X|Y) }{ 2 }
@@ -665,7 +667,14 @@ $$
 
 \section{Goodman \& Kruskal's $\tau$}
 Measures proportional reduction in error, as the two above do.  Used for nominal data. Sensitive to margin differences.  Asymmetric (as with the other PRE statistics).  Produces the same results as $\phi^2$ for 2x2 tables.  Ranges from 0-1, 0 being unassociated, 1 being entirely associated.  Introduced in 1954~\cite{goodman1954measures}.
-According to Goodman and Kruskal (1954) it can be interpreted as the ``relative decrease in the proportion of incorrect predictions when we go from predicting the row category based only on the row marginal probabilities (as in Lambda) to predicting the row category based on the conditional proportions of both row and column.''
+According to Goodman and Kruskal (1954) it can be interpreted as the ``relative decrease in the proportion of incorrect predictions when we go from predicting the row category based only on the row marginal probabilities (as in Lambda) to predicting the row category based on the conditional proportions of both row and column.  
+
+$\tau_{GK}$ is a PRE measure, and so is a ratio of predictive capacity in the data (whilst considering both variables) to the marginal sums:
+$$
+\tau_{GK}(Y|X) = \frac{   S \sum_{i, j}{ \frac{ f_{ij}^2 }{ r_i } } - \sum_{j=1}^{C}{ c_j^2 }    }{   S^2 - \sum_{j=1}^{C}{ c_j^2 }    }
+$$
+
+
 
 
 
@@ -684,23 +693,12 @@ Where $C$ is, as in the Notation section, the length of $X$.
 Somers' $D$ comes in both asymmetric and symmetric forms.  Suitable for ordinal data.  Ranges from -1 to 1, -1 being a negative relationship.  The asymmetric one is an extension of gamma, differing only in the inclusion of the number of pairs not tied on the independent variable.  Somers's $D$ is an asymmetric modification of $\tau_b$ (note: the paper mentioned below says that it is defined in terms of $\tau_a$, see below), in that it only corrects for pairs on the independent variable.  Appropriate only for when both variables are ordinal.  Related to Harrell's c index (Harrell \textsl{et al.} 1982/1996) as $D = 2c - 1$.
 
 
-
-
-% http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Falg_crosstabs_somers.htm
-Where $M_X$ is the number of possible pairs for the variable $X$, \textsl{i.e.} concordant pairs, discordant pairs, and pairs on which the variable is tied:
-$$
-M_X = S^2 - \sum_{i=0}^{R}{r_i^2}
-$$
-Likewise, $M_Y$ is the same, only for columns.
-
-
 \subsubsection{Asymmetric}
 Somers' $D$ is defined in terms of concordant and discordant pairs, as with Kendall's $\tau$:
-% D(Y|X) = \frac{ P - Q }{ (n^2 - \sum_{i=1}^{R}{ n_i^2 } ) }
+% http://srmo.sagepub.com/view/the-sage-dictionary-of-statistics/n537.xml
 $$
-D(Y|X) = \frac{ P - Q }{ M_X }
+D(Y|X) = \frac{ P - Q }{ P + Q + t_X }
 $$
-
 
 %\texttt{https://docs.google.com/viewer?a=v&q=cache:RVD2zhacPJMJ:www.imperial.ac.uk/nhli/r.newson/papers/somdext.pdf+&hl=en&gl=uk&pid=bl&srcid=ADGEESgAmhjzsbGNYWUcjbYWdVnIPBQg_IZTECjKewPCXxX5FpqKfJlAsrIIcFLINoIzLt2fENvkhkaTeezPAo33fiu5rKkGz7MMc3wsuL1MAQqxFcyBxBCg4K_KxR_afvYv_CTZ_NiY&sig=AHIEtbTWDn1bC55Nz4eMfpipQuPTfe3hnw} 
 The paper mentioned in the source above this line also defines it in terms of Kendall's $\tau_a$:
@@ -710,7 +708,7 @@ $$
 
 \subsubsection{Symmetric}
 $$
-D = \frac{ P - Q }{ \frac{1}{2}( M_X + M_Y ) }
+D = \frac{ P - Q } { P + Q + \frac{ t_X + t_Y }{ 2 } }
 $$
 
 
@@ -719,11 +717,24 @@ $$
 
 
 \section{$\eta$}
-Ranging from 0-1, 0 being no association.  Appropriate for 'nominal by interval' data, that is dependent measured on interval scale, independent on nominal scale (works for both interval, of course, too).  This would seem to apply well to word frequencies.
+Ranging from 0-1, 0 being no association.  Appropriate for 'nominal by interval' data, that is dependent measured on interval scale, independent on nominal scale (works for both interval, of course, too).  This would seem to apply well to word frequencies.  Asymmetric.  Does not assume linearity.  $\eta^2$ represents the proportion of variance in the dependent variable explained by the independent.  
 % from http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Fidh_xtab_statistics.htm
 % Two eta values are computed: one treats the row variable as the interval variable, and the other treats the column variable as the interval variable.
 
+Eta is computed as a ratio of two sums of squares.  The former of these is the sum of square differences between the row means and the grand mean cell value $f_\mu = \frac{S}{RC}$:
+$$
+F_{between} = \sum_{i=1}^{R}{    \left(   f_\mu -   \frac {r_i}{C} \right)^2  }
+$$
 
+The latter is the total sum of squares, taken from each cell:
+$$
+F_{total} = \sum_{i=1}^{R}{ \sum_{j=1}^{C}{   ( f_\mu - f_{ij} )^2    } }
+$$
+
+$\eta$ is simply the root of the ratio of $F_{between}$ and $F_{total}$:
+$$
+\eta(Y|X) = \sqrt{  \frac{ F_{between} }{ F_{total} }   }
+$$
 
 
 \section{Pearson $\chi^2$}
@@ -775,13 +786,32 @@ $$
 \label{section:oddsratio}
 A measure of an increase in $Y$ given an increase in $X$. % TODO: find original explanation
 Usually computed only for 2x2 tables, it's possible to extend odds ratio computations by generating many 2x2 contingency tables (category $k$ vs. not category $k$).  Suitablke for nominal data.  % http://www.john-uebersax.com/stat/odds.htm#extens loglinear association recommended instead in multi-category case
-Log odds most often used instead, making for simple confidence interval computations..
+Log odds most often used instead, making for simple confidence interval computations.  It's computed as the ratio of the odds of something occurring in one category to the odds of occurrance in another category.  Range of $[0-\infty)$, above one is positive relationship, below 1 is negative association, 1 is no association (log odds normalises this to $[-\infty, \infty]$ around 0 as the centre-point).  Symmetric.  For an $R$ by $C$ table, there are $(R-1)(C-1)$ non-redundant odds ratios.  Log-odds is slightly more conservative than Yule's Q.
+
+The formula for odds ratios in a $2\times 2$ context is (in this case, ratio of row 1 to row 2):
+$$
+OR = {   \frac{ f_{1\cdot} }{ (1-f_{1\cdot}) }   \bigg /  \frac{ f_{2\cdot} }{ (1-f_{2\cdot}) }        }
+$$
+
+For a $2\times 2$ matrix this becomes:
+$$
+OR = { \dfrac{f_{22}/(f_{22}+f_{21})}{f_{21}/(f_{22}+f_{21})} \bigg / \dfrac{f_{12}/(f_{12}+f_{11})}{f_{11}/(f_{12}+f_{11})}} = \dfrac{f_{22}f_{11}}{f_{21}f_{12}}
+$$
+
+
+Or, for larger matrices (applied repeatedly):
+FIXME: I think this should be applied using a different algorithm to those mentioned in my sources, which compute local odds ratios.  This demands more attention: how do I meaningfully reduce repeated ratios to a single statistic?
+% http://pages.uoregon.edu/aarong/teaching/G4075_Outline/node20.html
+%$$
+%OR = \dfrac{f_{kk}f_{\not k\not k}}{f_{k \not k}f_{\not k k}}
+%$$
+
 
 
 
 
 \section{Yule's $Q$}
-This is a normalisation of the odds ratio in Section~\ref{section:oddsratio} to vary between -1 and 1.
+This is a normalisation of the odds ratio in Section~\ref{section:oddsratio} to vary between -1 and 1.  See also Log Odds ratios, which do a similar thing (making the OR vary around 0).
 $$
 Q = \frac{OR - 1}{OR + 1}
 $$
@@ -791,8 +821,19 @@ Where $OR$ is the odds ratio (see Section~\ref{section:oddsratio}) of the data.
 
 
 \section{Cronbach's $\alpha$}
-Commonly used as a measure of reliability/`internal consistency' of psychometric tests.  First named $\alpha$ in 1951, and is an extension of the Kuder-Richardson Formula 20, an equivalent measure for binary data( \textsl{i.e.} $2\times 2$ tables).  Related to the Spearman-Brown prediction formula, and factor analysis.  Varies from 0 to 1, though according to Ritter~\cite{ritter2010understanding}, can vary below 0~in some circumstances {\color{red} (which?)}.
+Commonly used as a measure of reliability/`internal consistency' of psychometric tests.  First named $\alpha$ in 1951, and is an extension of the Kuder-Richardson Formula 20, an equivalent measure for binary data( \textsl{i.e.} $2\times 2$ tables).  Related to the Spearman-Brown prediction formula, and factor analysis.  Varies from 0 to 1 normally, or, strictly, in the range $(-\infty, 1]$, though according to Ritter~\cite{ritter2010understanding}, can vary below 0~in some circumstances {\color{red} (which? this \cite{cronbachalphanegative} )}. \cite{bland1997statistics}
+% http://srmo.sagepub.com/view/the-sage-dictionary-of-statistics/n13.xml
+% http://www.ats.ucla.edu/stat/spss/faq/alpha.html
 
+Cronbach's $\alpha$ is generally used to test agreement between scales, and as such is often phrased in terms of tests and scores.  For these formulae, each row will be one `question' or `testlet', with the columns representing multiple scores for each.  In this case, the numerator represents the sum of row variances, whilst the denominator is the total variance.
+$$
+\alpha = \frac{ R }{ R - 1 }   \left( 1 - \frac{ \sum_{i=1}^{R}{ \sigma_{f_{i\cdot}}^2 }    }{  \sigma_{S}^2  } \right) 
+$$
+A different form is written thus:
+$$
+\alpha = \frac{ R\bar{c} }{ \bar{v} + (R - 1)\bar{c} }
+$$
+Where $\bar{v}$ is the mean variance for each row, and $\bar{c}$ is the mean covariance between the components across the 'current sample of persons' {\color{red} Does this mean columns?}
 
 
 
@@ -811,74 +852,178 @@ as in Section~\ref{section:phi}
 
 
 \section{$F_\beta$-score}
-Applicable as classifier output, hence binary data (confusion matrix).  May be extended by applying in turn to each category, as with other methods here.  Represents the capacity of the independent variable as a predictor of the dependent.  May be weighted (by changing $\beta$) to change importance of precision or recall.
+Applicable as classifier output, hence binary data (confusion matrix).  May be extended by applying in turn to each category, as with other methods here.  Represents the capacity of the independent variable as a predictor of the dependent.  May be weighted (by changing $\beta$) to change importance of precision or recall.  Does not take into account true negative rate (which is arguably good for text comparison).
+
+$F_\beta$ is defined in terms of a confusion matrix, which, mapped onto a $2\times 2$ contingency table, resolves to:
+$$
+precision = \frac{ f_{11} }{ f_{11} + f_{12} }
+$$
+and
+$$
+recall = \frac{ f_{11} }{ f_{11} + f_{21} }
+$$
+where the table is organised such that $(1,1)$ contains counts of `true positives`, that is where both $X$ and $Y$ hold values for category $i$ (tp, fp, \ fn, tn).
+
+From these, the general formula for $F_\beta$ is:
+$$
+F_\beta = (1 + \beta^2) \frac{ precision ~\cdot~ recall }{ (\beta^2 ~ \cdot ~ precision) + recall }
+$$
+Where $\beta$ defines the importance of recall relative to precision (twice as important where $\beta = 2$).
+
+TODO: write form for use with non-2x2 types.
 
 
 
 
-\section{Mann-Whitney $U$}
-Used for hypothesis testing.  Large samples see $U$ to be normally distributed.  Equivalent to Kendall's $\tau$ where one variable is binary.  
+
+\section{Mann-Whitney-Wilcoxon $U$}
+Used for hypothesis testing.  Large samples see $U$ to be normally distributed.  Equivalent to Kendall's $\tau$ where one variable is binary.  suitable for use with ordinal data.  Works on ranked data.  Works by ranking data and then inspecting the distribution of each input list within the rankings.  $U$ follows the normal distribution, and is more of a formal test statistic than many on this list, so technically its limits are $[-\infty, \infty]$.  Is a variant of the Wilcoxon signed-rank test without the assumption that both input variables come from the same population.
+
+\subsection{Procedure}
+First, frequency lists $X$ and $Y$ are combined into a single list, $N$ (the information regarding which point is from which list is used later).  $N$ is then replaced with its rank (including means for ties, as in Section~\ref{section:spearman}).
+
+$U$ is computed on either list, and is the proportion of ranks that appear within the list, relative to the size of the list itself.  If this is 0.5, we know the data is randomly distributed:
+$$
+U_X = RC + \frac{ R(R+1) }{ 2 } - \sum_{i=0}^{R}{ rank(X_i) }
+$$
+where $R$ is the length of $X$, as in the notation section.  The same statistic may also be computed for $Y$, and it is conventional to use the shorter of the two lists.
+
+\subsubsection{Critical Values}
+For $R+C > 10$, $U$ follows a Normal distribution with standard deviation:
+$$
+\sigma = \sqrt{  \frac{  RC(R + C + 1)  }{  12 } }
+$$
+For small values of $R$ or $C$, the approximation is invalid.
 
 
 
 
-\section{Kolmogorov-Smirnov}
-Used to compare frequency distributions.
+
+
+
+\section{Kolmogorov-Smirnov's $D$}
+Used to compare frequency distributions.  Works by taking the maximum distance between the cumulative distribution of two variables.  Requires ordinal data.  Unaffected by scale changes, but then most of these probably are.  Requires squareness.  $D_{KS}$'s limits can be looked up in critical value tables for a given sample size (though this assumes normality {\color{red} check that}, but its limits are defined in terms of the original data.
+
+Computed as the proportion of the difference in cumulative distribution between $X$ and $Y$.
+$$
+D_{KS} = \sup_{i=1}^{R}\left[ \frac{ X_i }{ \sum{X} } - \frac{Y_i}{ \sum{Y} } \right]
+$$
+Note that $X$ and $Y$ are ordered, as in the Notation section, and due to the squareness requirement $R$ is the length of both $X$ and $Y$.
 
 
 
 
-\section{Likelihood Ratio}
-Suitable for use on nominal data.
+
+
+\section{Log-Likelihood Ratio}
+Suitable for use on nominal data.  $\Lambda$ used to represent.  Can be used to compare two arbitrary models based on their likelihoods.  Used for the Wilks test with contingency tables because $-2ln(\Lambda) \to \chi^2$ as $S \to \infty$ (with d.f. equal to the difference in dimensionality between null and alternative models, in thic case $|R-C|$.)  Likelihood ratios must be above a given threshold to indicate significant differences between models, but they vary within the range $[0, 1]$---at 0, the alternative model was not at all possible (no agreement), at 1 it was as likely to occur as the null model (full agreement).
+
+% From http://www.quantitativeskills.com/sisa/statistics/two2hlp.htm#LRX
+% The LRX has the important property that an LRX with more than one degree of freedom can be partialised into a number of smaller tables each with its own (smaller) LRX and (lower numbers of) degrees of freedom. The sum of the partial LRXs and associated partial degrees of freedom, as found in the smaller tables, equals the original LRX and original number of degrees of freedom.
+
+The general model comparison may be written as:
+$$
+D = -2ln \left( \frac{ likelihood~of~null~model }{ likelihood~of~alternative~model } \right)
+$$
+
+
+
+
+\subsubsection{Wilks' Statistic}
+Performed on contingency tables (for computation of the Wilks' statistic $W$):
+$$
+W = -2\ln\Lambda = 2 \sum_{i=1}^{R}{ \sum_{j=1}^{C}{ f_{ij}\ln \left( { \frac{f_{ij}}{r_i}  \bigg/  \frac{c_j}{S}  }  \right)   }}
+$$
+% See http://ucrel.lancs.ac.uk/llwizard.html for handy decomposure of the above, the denominator is really an expected value for the call frequency.
+% It might be handy to make that into another equation section \mathbb{E}...
+For comparison against a $\chi^2$ distribution with $d.f.~= |R-C|$.
+
+
+\subsubsection{$\Lambda$}
+To compute `straight' Likelihood ratio $\Lambda$:
+$$
+\Lambda = - \frac{ e^W }{ 2 }
+$$
+TODO: perhaps try to phrase this without going via Wilks', it may make the computation easier or less lossy.
+
+
+
 
 
 
 
 \section{Cosine Similarity}
-A measure of angular similarity using a vector space model.  Often used in data/text mining.  Ranges from -1 to 0.  Known in biology by the names ``Ochai coefficient'' or ``Ochiai-Barkman coefficient''.
+A measure of angular similarity using a vector space model.  Often used in data/text mining.  Ranges from -1 to 1, with -1 being precise negative relationship and 1 being identical data (0 is independence).  Known in biology by the names ``Ochai coefficient'' or ``Ochiai-Barkman coefficient''.  Assumes squareness and is sensitive to ordering (ordinal).
 
 May be computed using the euclidean dot product of two vectors.  See also euclidean distance, Manhattan distance below (Sections~\ref{section:euclid}\ref{section:manhattan} respectively).
 
+It may be computed thus:
+$$
+cos = \frac{ X \cdot Y }{ \|X\|\|Y\| } = \frac{  \sum_{i=0}^{R}{ X_iY_i }  }{     \sqrt{ \sum_{i=1}^{R}{X_i^2} }  \cdot  \sqrt{ \sum_{i=1}^{R}{Y_i^2} }    }
+$$
+Note that $R$ may be used to represent the length of $X$ and $Y$ due to squareness requirement.
 
 
 
-% Set based methods
-\section{Sorensen Similarity Index}
-Based on sampling the same population.  Works for binary data (inclusion or lack thereof in $X$ and $Y$)
-
-
-
-\section{Jaccard Index}
-Works for binary data (inclusion or lack thereof in $X$ and $Y$).
 
 
 
 % Distances
-\section{Percentage Score Difference}
-The percentage of an entry in $X$, minus the percentage of an entry in $Y$.  Asymmetric unless the sign is deliberately discarded {\color{red} is this done often?}.
+\section{Percentage Score (Normalised) Difference}
+\label{section:percentage}
+The percentage of an entry in $X$, minus the percentage of an entry in $Y$.  Asymmetric unless the sign is deliberately discarded {\color{red} is this done often?}.  Doesn't adjust for the probability of association by chance.  Assumes squareness in this form (could be padded with 0s).  Varies in the range $[0-100]$ in the \% age form, where 0\% is perfect similarity of proportions, and 100\% is total difference.
+
+This is simply the difference in proportions each corresponding item in lists $X$ and $Y$:
+
+\subsubsection{Asymmetric}
+$$
+D_\%(Y|X) = { \sum_{i=0}^{R}{ \left(  \frac{X_i}{\sum{X}} - \frac{Y_i}{\sum{Y}} \right) }  \bigg / (100R) }
+$$
+Clearly, divide this by 100 to get a scale from 0-1.  $R$ is used above under squareness assumptions that it represents the length of $X$ and $Y$.
+
+\subsubsection{Symmetric}
+$$
+D_\%(Y|X) = { \sum_{i=0}^{R}{ \left|  \frac{X_i}{\sum{X}} - \frac{Y_i}{\sum{Y}} \right| }  \bigg / (100R) }
+$$
+
+
+
+
 
 \section{Euclidean Distance}
 \label{section:euclid}
-The distance between two points in vector-space as travelled directly.  
+The distance between two points in vector-space as travelled directly.  Uses pythagoras to determine `direct route'.  Its limits are dependent on the data, with maximum association at 0 and minimum/negative association at TODO...  As with other vector-space methods, requires squareness.  Symmetric
 
-%Varies between 0 (full agreement) and $\sum{X} + \sum{Y}$ (total difference). Is often {\color{red} check!} normalised by discarding the sign.
-%$$
-%D_{E}(Y|X) = \sum_{i=1}^{i < C}{ Y_i - X_i }
-%$$
-%Where $C$ is the number of items in $X$, as per Notation above.
-
+$$
+D_E = \sqrt{ \sum_{i=1}^{R}{ (Y_i - X_i)^2 } }
+$$
+Where $R$ is the number of items in $X$ and $Y$, as per Notation above.
 
 
 
 \section{Manhattan/Taxicab Distance}
 \label{section:manhattan}
-Also known as squared Euclidiean distance, for obvious reasons.  Equivalent to travelling between two points in vector space by moving only orthogonal to axes, in two dimensions this looks like the route a taxi would take around a grid system.
+Also known as squared Euclidiean distance, for obvious reasons.  Equivalent to travelling between two points in vector space by moving only orthogonal to axes, in two dimensions this looks like the route a taxi would take around a grid system.  It is an un-normalised form of Percentage score difference (Section~\ref{section:percentage}).  Requires squareness.  Asymmetric, but can be symmetric by disregarding the sign.
+ 
+Varies between 0 (full agreement) and $\sum{X} + \sum{Y}$ (total difference). Is often {\color{red}  check!} normalised by discarding the sign.
+
+{\color{red} TODO: fix sum(X) into common notation (row/column sums)}
+\subsubsection{Asymmetric}
+$$
+D_M(Y|X) = \sum_{i=1}^{R}{ (Y_i - X_i) }
+$$
+Where $R$ is the number of items in $X$ and $Y$, as per Notation above.
+
+\subsubsection{Symmetric}
+$$
+D_M = \sum_{i=1}^{R}{ |Y_i - X_i| }
+$$
 
 
 
 
 \section{Tversky Index}
-Generalised form of Tanimoto and Dice coefficients used in information retrieval.
+Generalised form of Dice coefficient (itself identical to the Jaccard index and S\o renson/Czekanowski's similarity index, itself equal to one minus the Hellinger Distance and Bray Curtis dissimilarity) used in information retrieval.
 
 
 
@@ -889,11 +1034,29 @@ See Section \ref{section:mantelhaenszel}.  Cochran's statistic is merely an unco
 \label{section:mantelhaenszel}
 Tests conditional independence of two binary values, controlling for one or more categorical variables.  Requires ordinal data.  Based on odds ratios.  First defined in 1959 {\color{red} (though the only refernece I have thus far is from '04...)}~\cite{mantel2004statistical}.  Computed once after each 2x2 group (for $k$ groups) has itself been computed.
 
+% FROM http://www.quantitativeskills.com/sisa/statistics/two2hlp.htm#MHX
+% Mantel Heanszel Chi-square Mantel-Haenszel Chi-square is thought to be closer to the 'true' Chi-square if small numbers of cases are involved.
+
 Mantel-Haenszel's statistic is a corrected form of Cochran's, with small-sample correction and inflation of variance.
 
 
 \section{Fisher's Exact Test}
-Only usable on 2 $\times$ 2 matrices (may be repeated with $k$ categories as with other methods with this restriction.)
+Only usable on 2 $\times$ 2 matrices, though one is available for $2\times 3$ tables too (may be repeated with $k$ categories as with other methods with this restriction.).
+% Wikipedia: However the principle of the test can be extended to the general case of an m × n table,[7][8] and some statistical packages provide a calculation (sometimes using a Monte Carlo method to obtain an approximation)
+% [7] -> Mehta C.R., Patel N.R. (1983). "A Network Algorithm for Performing Fisher's Exact Test in r Xc Contingency Tables". Journal of the American Statistical Association
+% [8] -> http://mathworld.wolfram.com/FishersExactTest.html
+May be hard to compute for large values due to its enumeration of combinatoric explosion.  Suitable for small values.  Used for categorical data.  Tests for independence, similar to $\chi^2$ (only exact mathematically). 
+% http://srmo.sagepub.com/view/the-sage-dictionary-of-statistics/n213.xml
+
+In the $2\times 2$ form, it is computed as:
+$$
+p = \frac{ r_1!r_2!c_1!c_2! }{ f_{11}!f_{12}!f_{21}!f_{22}!S! }
+$$
+
+Generalised to $R\times C$, this becomes:
+$$
+p = \frac{ (\prod_{i=1}^{R}{ r_i! })  (\prod_{j=1}^{C}{ c_j! }) }{ S! \prod_{i=1}^{R}{  \prod_{j=1}^{C}{ f_{ij}! }}    }
+$$
 
 
 \section{Kilgarriff's `Simple Maths'}
