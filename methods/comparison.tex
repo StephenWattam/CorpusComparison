@@ -83,12 +83,23 @@ Possible groupings:
 
 
 \subsection{Notation}
+\subsubsection{Lists and Crosstabulations}
 %CITE: notation both semi-common and taken from http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Falg_crosstabs_somers.htm
-Throughout the paper, we will be using the same formalism to describe frequencies of text in two input corpora, $X$ and $Y$, sorted in ascending order ($X_1 < X_2 < ... < X_R$, accordingly for $Y$).
+Throughout the paper, we will be using the same formalism to describe frequencies of text in two input corpora, $X$ and $Y$, sorted in ascending order:
+$$
+X_1 < X_2 < ... < X_R
+$$
+and, accordingly for $Y$:
+$$
+Y_1 < Y_2 < ... < Y_C
+$$
 
-These will be crosstabulated into $R$ rows and $C$ columns.  $f_{ij}$ represents the value at the $i$th column and $j$th row.  Marginal sums are given by 
+
+For some measures, these will be crosstabulated into $R$ rows and $C$ columns.  $f_{ij}$ represents the value at the $i$th column and $j$th row.  Marginal sums are given by 
 $$ c_j = \sum_{i=1}^{R}f_{ij} $$ for the column total, and $$ r_i = \sum_{j=1}^{C}f_{ij} $$.  The grand sum is represented by $$S = \sum_{i=1}^{R}r_i = \sum_{j=1}^{C}c_i $$
 
+
+\subsubsection{Pairs}
 For measures that involve concordant or discordant pairs, they are defined as follows:
 $$
 pair = (X_i, Y_i), (X_j, Y_j); i \neq j
@@ -106,6 +117,22 @@ $$
 The number of tied values is counted in $t_X$ for $X$, and, rather obviously, $t_Y$ for $Y$.
 % TODO: move explanation of pairs up here, decide on something better than C, D, T for concordant, Discordant and Ties.
 %Concordant pairs, denoted by $P$ are pairs of values such that % TODO
+
+\subsubsection{Information Entropy}
+% http://v8doc.sas.com/sashtml/stat/chap28/sect20.htm
+Some metrics are defined in terms of the entropy of their lists, represented by $H$.  For rows:
+$$
+H(X) = -\sum_{i=1}^{R}{ \left[ \frac{ r_i }{ S }       \ln \left( \frac{ r_i }{ S } \right) \right] }
+$$
+accordingly for columns:
+$$
+H(Y) = -\sum_{j=1}^{C}{ \left[ \frac{ c_j }{ S }       \ln \left( \frac{ c_j }{ S } \right) \right] }
+$$
+And for joint entropy:
+$$
+H(X,Y) = -\sum_{i=1}^{R}{  \sum_{j=1}^{C}{ \left[    \frac{ f_{ij} }{S}  \ln \left( \frac{ f_{ij} }{ S } \right)     \right] } }
+$$
+
 
 
 
@@ -514,8 +541,6 @@ Rules of thumb are often used for $\kappa$, and it is possible to compute signif
 
 
 % =============================================================================
-%  TODO VVVVVVVVVVVVVVVV
-%  http://en.wikibooks.org/wiki/Algorithm_Implementation/Statistics/Fleiss'_kappa
 \section{Fleiss' $\kappa$} %name of group of statistics
 \subsection{Description}
 A generalisation of Scott's pi statistic %CITE: (Scott, W. (1955) pp. 321–325)
@@ -524,6 +549,7 @@ A generalisation of Scott's pi statistic %CITE: (Scott, W. (1955) pp. 321–325)
 Widely used in psychology.
 
 \cite{fleiss1971measuring}
+%  http://en.wikibooks.org/wiki/Algorithm_Implementation/Statistics/Fleiss'_kappa
 
 %'Wikipedia: Fleiss' kappa specifically assumes that although there are a fixed number of raters (e.g., three), different items are rated by different individuals (Fleiss, 1971, p.378). That is, Item 1 is rated by Raters A, B, and C; but Item 2 could be rated by Raters D, E, and F.'
 % http://www.statsdirect.com/help/agreement/kappa.htm
@@ -598,6 +624,7 @@ $$
 'It can be interpreted as expressing the extent to which the observed amount of agreement among raters exceeds what would be expected if all raters made their ratings completely randomly.' [wikipedia!]
 
 \subsection{Critical Values}
+Unknown, TODO
 % Is it possible to find critical values for this measure?
 %  1) If so, how? (brief mention is adequate for now)
 %  2) In what contexts are the values valid?
@@ -605,10 +632,55 @@ $$
 
 
 
+
+
+
+
+% =============================================================================
 % Proportional reduction in error
 \section{Goodman \& Kruskal's $\lambda$}
-Asymmetric and symmetric forms available.  Varied between 0 and 1, and is a measure of predictive capacity.  Suitable for nominal data.  Is a measure of proportional increase in predictive accuracy, as is Goodman and Kruskal's $\tau$ and the Theil's U (uncertainty coefficient).  Note that $\lambda$ suffers from uniqueness assumptions in establishing the mode.  There seems to be no single method to escape these, but check (TODO)
+\label{section:goodmankruskallambda}
+\subsection{Description}
+$\lambda$ is a measure of proportional reduction in error (as is Goodman \& Kruskal's $\tau$ and Theil's $U$, in Sections~\ref{section:goodmankruskaltau} and \ref{section:theilu} respectively).  First introduced in 1954 by those for which it is named~\cite{goodman1954measures}.
 
+It is computed by using the modal value for one list as a predictor for the second, and as such requires a single modal value to be present (TODO: check).  It is available in both asymmetric and symmetric forms.
+
+%Asymmetric and symmetric forms available.  Varies between 0 and 1, and is a measure of predictive capacity.  Suitable for nominal data.  Is a measure of proportional increase in predictive accuracy, as is Goodman and Kruskal's $\tau$ and the Theil's U (uncertainty coefficient).   Note that $\lambda$ suffers from uniqueness assumptions in establishing the mode.  There seems to be no single method to escape these, but check 
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& Single modal value \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? &  Optional \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 % SEE: http://vassarstats.net/lamexp.html FOR AN AMAZING EXPLANATION!
 \subsubsection{Asymmetric}
 (with $Y$ as the dependent variable):
@@ -632,67 +704,328 @@ $$
 $$
 
 
-\section{Theil's $U$ (Uncertainty Coefficient)}
-Available in both symmetric and asymmetric forms.  Measures reduction in error when the independent variable is used to measure the dependent.  Suitable for nominal data (can be applied to continuous using density estimation).  Based on the concept of information entropy, and is essentially a normalised form of Mutual Information---thus useful for assessing information based systems like clustering algorithms.  Unlike $\lambda$, considers whole distribution rather than simply the mode.  Used for evaluating the quality of classifiers.  Ranges from 0 to 1.
+% How do we compute the statistic?
 
-% http://v8doc.sas.com/sashtml/stat/chap28/sect20.htm
-Both forms of the Uncertainty coefficient are defined in terms of the entropy of their lists, $H$, and their conditional probabilities.  For rows:
+\subsection{Intrepretation}
+$\lambda$ takes the value 0 where two values are in accord, and 1 where the variables differ.  This distinction is made by comparing modal categories, and is not concerned by precise frequencies or proportions.
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+Unknown, TODO.
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
+
+
+
+
+
+
+
+
+% =============================================================================
+%
+\section{Theil's $U$ (Uncertainty Coefficient)}
+\label{section:theilu}
+\subsection{Description}
+Another measure of proportional reduction in error, this measure is based on the entropy of its input lists, and is a normalised form of Mutual Information.  This means it considers the whole distribution, rather than simply the mode (as with $\lambda$, Section~\ref{section:goodmankruskallambda}).  
+
+It was first defined in 1966 by Henri Theil~\cite{theil1966applied}.  It is widely used in information retrieval, evaluating clustering algorithms, and many other scientific fields.
+
+Theil's $U$ is available in both symmetric and asymmetric forms.
+
+%Available in both symmetric and asymmetric forms.  Measures reduction in error when the independent variable is used to measure the dependent.  Suitable for nominal data (can be applied to continuous using density estimation).  Based on the concept of information entropy, and is essentially a normalised form of Mutual Information---thus useful for assessing information based systems like clustering algorithms.  Unlike $\lambda$, considers whole distribution rather than simply the mode.  Used for evaluating the quality of classifiers.  Ranges from 0 to 1.
+
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& None \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Optional \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+Since Theil's $U$ is a normalised form of mutual information, it is pertinent to define it:
 $$
-H(X) = -\sum_{i=1}^{R}{ \left[ \frac{ r_i }{ S }       \ln \left( \frac{ r_i }{ S } \right) \right] }
-$$
-accordingly for columns:
-$$
-H(Y) = -\sum_{j=1}^{C}{ \left[ \frac{ c_j }{ S }       \ln \left( \frac{ c_j }{ S } \right) \right] }
-$$
-And for joint entropy:
-$$
-H(XY) = -\sum_{i=1}^{R}{  \sum_{j=1}^{C}{ \left[    \frac{ f_{ij} }{S}  \ln \left( \frac{ f_{ij} }{ S } \right)     \right] } }
+MI(X,Y) = H(X) + H(Y) - H(X, Y)
 $$
 
 \subsubsection{Asymmetric}
-(with $Y$ as the dependent):
+With $Y$ as the dependent variable, we can define $U$ in terms of mutual information:
 $$
-U(Y|X) = \frac{ H(X) + H(Y) - H(XY) }{ H(Y) }
+U(Y|X) = \frac{ MI(X,Y) }{ H(Y) }
 $$
 
 \subsubsection{Symmetric}
 % NB: this is a simplification of two of the above, with the denominators summed too.
 $$
-U = 2 \left[ \frac{ H(X) + H(Y) - H(XY) }{ H(X) + H(Y) } \right]
+U = 2 \left[ \frac{ MI(X,Y) }{ H(X) + H(Y) } \right]
 $$
 
 
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+Like other measures of proportional reduction in error, this measure is 0 for perfectly accordant variables, and 1 for entirely discordant ones.  To achieve its extremes, both variables must be identical in proportion, but not frequency. {\color{red} check and elaborate}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+Unknown, TODO
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
+
+
+
+
+
+
+
+
+
+% =============================================================================
 \section{Goodman \& Kruskal's $\tau$}
-Measures proportional reduction in error, as the two above do.  Used for nominal data. Sensitive to margin differences.  Asymmetric (as with the other PRE statistics).  Produces the same results as $\phi^2$ for 2x2 tables.  Ranges from 0-1, 0 being unassociated, 1 being entirely associated.  Introduced in 1954~\cite{goodman1954measures}.
-According to Goodman and Kruskal (1954) it can be interpreted as the ``relative decrease in the proportion of incorrect predictions when we go from predicting the row category based only on the row marginal probabilities (as in Lambda) to predicting the row category based on the conditional proportions of both row and column.  
+\label{section:goodmankruskaltau}
+\subsection{Description}
+Another measure of proportional reduction in error (as with Theil's $U$ and Goodman \& Kruskal's $o\lambda$).  First introduced in 1954, along with Goodman and Kruskal's other measures \cite{goodman1954measures}.
 
+
+% Measures proportional reduction in error, as the two above do.  
+% Used for nominal data. 
+%Sensitive to margin differences.  
+%Asymmetric (as with the other PRE statistics).  
+% Produces the same results as $\phi^2$ for 2x2 tables.  
+% Ranges from 0-1, 0 being unassociated, 1 being entirely associated.  
+% Introduced in 1954~\cite{goodman1954measures}.
+According to Goodman and Kruskal, it is to be interpreted as the ``relative decrease in the proportion of incorrect predictions when we go from predicting the row category based only on the row marginal probabilities (as in Lambda) to predicting the row category based on the conditional proportions of both row and column.''
+
+
+
+
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & No \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 $\tau_{GK}$ is a PRE measure, and so is a ratio of predictive capacity in the data (whilst considering both variables) to the marginal sums:
 $$
 \tau_{GK}(Y|X) = \frac{   S \sum_{i, j}{ \frac{ f_{ij}^2 }{ r_i } } - \sum_{j=1}^{C}{ c_j^2 }    }{   S^2 - \sum_{j=1}^{C}{ c_j^2 }    }
 $$
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+Sensitive to differences in marginal values.  Takes the value 0 where there is no association, and 1 where both marginal sums are entirely in accord.
+
+For $2\times 2$ tables, this measure is identical to $\phi^2$ (see Section~\ref{section:phi}).
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+Unknown, TODO
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
 
 
+
+
+% =============================================================================
 \section{Kullback-Leibler Divergence}
-Asymmetric.  Measures the difference between two probability distributions in terms of the extra information in the depdenent one.  Computed from Fisher information.  
+\subsection{Description}
+Available in both symmetric and asymmetric forms.  Measures the difference between two probability distributions in terms of the extra information in the depdenent one.  Computed from Fisher information.  
 
-In the discrete case:
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, ? TODO] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& None \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal, ordinal, interval, ratio ? TODO \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Optional \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+\subsubsection{Asymmetric}
 $$
-D_{KL}(Y|X) = \sum_{i=1}^{C}{ \ln \left( \frac{X_i}{Y_i} \right) } X_i
+D_{KL}(Y|X) = \sum_{i=1}^{R}{ \ln \left( \frac{X_i}{Y_i} \right) } X_i
 $$
-Where $C$ is, as in the Notation section, the length of $X$.
+Where $R$ is, as in the Notation section, the length of both $X$ and $Y$ (due to squareness assumptions).
+
+\subsubsection{Symmetric}
+Kullback and Leibler defined their divergeance symmetrically, as the sum of two asymmetric divergeances:
+$$
+D_{KL} = D_{KL}(Y|X) + D_{KL}(X|Y)
+$$
+
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+Describes the amount of information `lost' when using $Y$ to approximate $X$, measured in bits.  Unlike most formulae covered here, the output of the divergeance is in the same dimension as its input.  Takes the value 0 when both distributions are identical.
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+Unknown, TODO
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
+
+
+
+
+
+% =============================================================================
 \section{Somers' $D$}
-Somers' $D$ comes in both asymmetric and symmetric forms.  Suitable for ordinal data.  Ranges from -1 to 1, -1 being a negative relationship.  The asymmetric one is an extension of gamma, differing only in the inclusion of the number of pairs not tied on the independent variable.  Somers's $D$ is an asymmetric modification of $\tau_b$ (note: the paper mentioned below says that it is defined in terms of $\tau_a$, see below), in that it only corrects for pairs on the independent variable.  Appropriate only for when both variables are ordinal.  Related to Harrell's c index (Harrell \textsl{et al.} 1982/1996) as $D = 2c - 1$.
+\label{section:somersd}
+\subsection{Description}
+Somers' $D$ comes in both asymmetric and symmetric forms.  It is used in psychology and geography, and was first defined in 1962~\cite{somers1962new}.
+% Suitable for ordinal data.  
+% Ranges from -1 to 1, -1 being a negative relationship.  
+The asymmetric form is an extension of gamma, differing only in the inclusion of the number of pairs not tied on the independent variable.  
+Somers's $D$ is an asymmetric modification of $\tau_b$ (note: the paper mentioned below says that it is defined in terms of $\tau_a$, see below), in that it only corrects for pairs on the independent variable.  
+% Appropriate only for when both variables are ordinal.  
+Related to Harrell's c index (Harrell \textsl{et al.} 1982/1996) as $D = 2c - 1$.
+
+TODO: find where it was first used or defined, cite Harrell.
+
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions & None \\ \hline
+
+    % What types of data may this run on?
+    Data type & ordinal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes (with 0-padding) \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & No \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
 
 
+\subsection{Formula}
 \subsubsection{Asymmetric}
 Somers' $D$ is defined in terms of concordant and discordant pairs, as with Kendall's $\tau$:
 % http://srmo.sagepub.com/view/the-sage-dictionary-of-statistics/n537.xml
@@ -700,8 +1033,7 @@ $$
 D(Y|X) = \frac{ P - Q }{ P + Q + t_X }
 $$
 
-%\texttt{https://docs.google.com/viewer?a=v&q=cache:RVD2zhacPJMJ:www.imperial.ac.uk/nhli/r.newson/papers/somdext.pdf+&hl=en&gl=uk&pid=bl&srcid=ADGEESgAmhjzsbGNYWUcjbYWdVnIPBQg_IZTECjKewPCXxX5FpqKfJlAsrIIcFLINoIzLt2fENvkhkaTeezPAo33fiu5rKkGz7MMc3wsuL1MAQqxFcyBxBCg4K_KxR_afvYv_CTZ_NiY&sig=AHIEtbTWDn1bC55Nz4eMfpipQuPTfe3hnw} 
-The paper mentioned in the source above this line also defines it in terms of Kendall's $\tau_a$:
+Newson~\cite{newson2006confidence} also defines $D$ in terms of Kendall's $\tau_a$:
 $$
 D(Y|X) = \frac{ \tau_a(XY) }{  \tau_a(XX) }
 $$
@@ -711,13 +1043,74 @@ $$
 D = \frac{ P - Q } { P + Q + \frac{ t_X + t_Y }{ 2 } }
 $$
 
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+Takes the value of -1 when describing a perfect negative relationship, 0 when independent, and 1 for perfect accordance.
+
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+Unknown, TODO
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
 
 
+
+
+
+% =============================================================================
 \section{$\eta$}
-Ranging from 0-1, 0 being no association.  Appropriate for 'nominal by interval' data, that is dependent measured on interval scale, independent on nominal scale (works for both interval, of course, too).  This would seem to apply well to word frequencies.  Asymmetric.  Does not assume linearity.  $\eta^2$ represents the proportion of variance in the dependent variable explained by the independent.  
+\label{section:eta}
+\subsection{Description}
+Appropriate for `nominal by interval' data, that is dependent measured on interval scale, independent on nominal scale.  Used in psychology.  
+% Asymmetric.  
+% Does not assume linearity.  
+TODO: find origin of eta (citation)
+
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& None \\ \hline
+
+    % What types of data may this run on?
+    Data type & `nominal by interval' \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & No \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 % from http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Fidh_xtab_statistics.htm
 % Two eta values are computed: one treats the row variable as the interval variable, and the other treats the column variable as the interval variable.
 
@@ -735,11 +1128,75 @@ $\eta$ is simply the root of the ratio of $F_{between}$ and $F_{total}$:
 $$
 \eta(Y|X) = \sqrt{  \frac{ F_{between} }{ F_{total} }   }
 $$
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+Eta takes the value 0 where no association is found between $X$ and $Y$, and 1 where both variables are monotonically related.  Linearity is not assumed.
+
+$\eta^2$ represents the proportion of variance in the dependent variable explained by the independent.
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+Unknown, TODO
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
+
+
+
+
+
+
+
+% =============================================================================
+% TODO vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 \section{Pearson $\chi^2$}
-Mention $\phi$ and Cram\'er's $V$, and the Contingency coefficient (based on chi-square).  Suitable for use on nominal data.  Unsuitable for low-frequency counts.
+\label{section:pearsonchisq}
+\subsection{Description}
+Defined in 1900 by Karl Pearson~\cite{pearson1900x}.
+Mention $\phi$ and Cram\'er's $V$, and the Contingency coefficient (based on chi-square).
 
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, $\infty$] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions&  \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 The test statistic is normally defined in terms of observed and expected frequencies, typically computed from marginals:
 $$
 \chi^2 = \sum_{i=1}^R{  \sum_{j=1}^C{ \frac{ (f_{ij} - \mathbb{E}_{ij} )^2 }{ \mathbb{E}_{ij} } } }
@@ -748,6 +1205,31 @@ where $\mathbb{E}$ for cell $(i,j)$ is computed as:
 $$
 \mathbb{E}_{ij} = \frac{ c_{i \cdot} r_{\cdot j} }{ S }
 $$
+
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
+
+
+
+
+
+
+
+
+
+
+
 
 
 \section{$\phi$, (Matthews Correlation Coefficient)}
@@ -763,6 +1245,14 @@ $$
 
 
 
+
+
+
+
+
+
+
+
 \section{Cram\'er's $V$}
 A standardisation of $\phi^2$.  Ranges from 0 to 1, 0 being no association, 1 being complete.  Identical to Tschuprow's T for square tables.  Cram\'er's $V$ doesn't require a square table.  Suitable for use on nominal data (due to chisq link).
 $$
@@ -773,11 +1263,32 @@ Where $m$ is the smaller of the two table dimensions, $min(R, C)$  (and $S$ is m
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 \section{Contingency Coefficient}
 Another statistic that corrects $\chi^2$ for non-2x2 table sizes.  As such it's used on nominal data.  Maximum value depends on the size of the table, being 0.707 for 2x2 tables, 0.87 for a 4x4 table etc.  
 $$
 CC = \sqrt{ \frac{ \chi^2 }{ \chi^2 + S } }
 $$
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -800,11 +1311,20 @@ $$
 
 
 Or, for larger matrices (applied repeatedly):
-FIXME: I think this should be applied using a different algorithm to those mentioned in my sources, which compute local odds ratios.  This demands more attention: how do I meaningfully reduce repeated ratios to a single statistic?
+FIXME: I think this should be applied using a different algorithm to those mentioned in my sources, which compute local odds ratios.  
+See Mantel-Haenszel, it's just the average of odds ratios, but the notation might get ugly with contingency table style $f_{ij}$.
 % http://pages.uoregon.edu/aarong/teaching/G4075_Outline/node20.html
 %$$
 %OR = \dfrac{f_{kk}f_{\not k\not k}}{f_{k \not k}f_{\not k k}}
 %$$
+
+
+
+
+
+
+
+
 
 
 
@@ -816,6 +1336,67 @@ $$
 Q = \frac{OR - 1}{OR + 1}
 $$
 Where $OR$ is the odds ratio (see Section~\ref{section:oddsratio}) of the data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Cochran's Statistic}
+See Section \ref{section:mantelhaenszel}.  Cochran's statistic is merely an uncorrected form.
+
+\section{Mantel-Haenszel}
+\label{section:mantelhaenszel}
+Tests conditional independence of two binary values, controlling for one or more categorical variables.  Requires ordinal data.  Based on odds ratios.  First defined in 1959 {\color{red} (though the only refernece I have thus far is from '04...)}~\cite{mantel2004statistical}.  Computed once after each 2x2 group (for $k$ groups) has itself been computed.  Assumes squareness, but items could be replaced with 0s.
+Mantel-Haenszel's statistic is a corrected form of Cochran's, with small-sample correction and inflation of variance.
+% FROM http://www.quantitativeskills.com/sisa/statistics/two2hlp.htm#MHX
+% Mantel Heanszel Chi-square Mantel-Haenszel Chi-square is thought to be closer to the 'true' Chi-square if small numbers of cases are involved.
+
+Mantel-Haenszel's test is designed to be used on a series of pooled $2\times 2$ tables, for example, from different locations, combining the odds ratios into a single statistic.  Applied to multiple categories, it would be possible to form a $2\times 2$ confusion matrix for each category.
+
+\subsubsection{Mantel-Haenszel Test Statistic}
+The test statistic follows a chi-squared distribution and is:
+$$
+\chi^2_{MH} = \frac{ A^2 }{ Var(A) }
+$$
+where
+$$
+A = \sum_{i=1}^{R}{  \frac{  X_i ¬Y_i  -  ¬X_i Y_i }{ S }  }
+$$
+where $¬X_i$ is the count of items not in category $i$ for variable $X$ (\textsl{i.e.} $\sum{X} - X_i$), and:
+$$
+Var(A) = \frac{   \sum_{i=1}^{R}{  R C (X_i Y_i) (¬X_i ¬Y_i) }  }{  S^2(S - 1)  }
+$$
+Note that, for repeated categories, $S$ is the grand total (as in Notation), but otherwise may vary per stratum to be the total of items in that straum only.
+
+TODO: mention the statistic varying with chisq, how many DOF?
+
+\subsubsection{Mantel-Haenszel Odds Ratio}
+This is simply the weighted average of the odds ratios from each stratum.  Note that, where the totals of each stratum are equal (i.e. during artificial stratification for $k$ groups), this is simply the average of odds ratios.  {\color{red} I should probably omit this whole thing in that case...}.
+$$
+OR_{MH} = \frac{ { \sum_{i=0}^{R}{ X_i ¬Y_i } / S } }{ { \sum_{i=0}^{R}{ ¬X_i Y_i } / S} }
+$$
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -837,6 +1418,17 @@ Where $\bar{v}$ is the mean variance for each row, and $\bar{c}$ is the mean cov
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 \section{Tschuprow's $T$}
 For nominal data.  Range between 0 and 1, 0 where no association, 1 where full association.  Can only achieve 1 for square tables. Identical to Cram\'er's $V$ for square tables.  Based on $\phi^2$.
 $$
@@ -847,6 +1439,19 @@ $$
 \phi^2 = \frac{\chi^2}{n}
 $$
 as in Section~\ref{section:phi}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -871,6 +1476,14 @@ $$
 Where $\beta$ defines the importance of recall relative to precision (twice as important where $\beta = 2$).
 
 TODO: write form for use with non-2x2 types.
+
+
+
+
+
+
+
+
 
 
 
@@ -901,6 +1514,13 @@ For small values of $R$ or $C$, the approximation is invalid.
 
 
 
+
+
+
+
+
+
+
 \section{Kolmogorov-Smirnov's $D$}
 Used to compare frequency distributions.  Works by taking the maximum distance between the cumulative distribution of two variables.  Requires ordinal data.  Unaffected by scale changes, but then most of these probably are.  Requires squareness.  $D_{KS}$'s limits can be looked up in critical value tables for a given sample size (though this assumes normality {\color{red} check that}, but its limits are defined in terms of the original data.
 
@@ -909,6 +1529,16 @@ $$
 D_{KS} = \sup_{i=1}^{R}\left[ \frac{ X_i }{ \sum{X} } - \frac{Y_i}{ \sum{Y} } \right]
 $$
 Note that $X$ and $Y$ are ordered, as in the Notation section, and due to the squareness requirement $R$ is the length of both $X$ and $Y$.
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -925,6 +1555,16 @@ The general model comparison may be written as:
 $$
 D = -2ln \left( \frac{ likelihood~of~null~model }{ likelihood~of~alternative~model } \right)
 $$
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -952,6 +1592,15 @@ TODO: perhaps try to phrase this without going via Wilks', it may make the compu
 
 
 
+
+
+
+
+
+
+
+
+
 \section{Cosine Similarity}
 A measure of angular similarity using a vector space model.  Often used in data/text mining.  Ranges from -1 to 1, with -1 being precise negative relationship and 1 being identical data (0 is independence).  Known in biology by the names ``Ochai coefficient'' or ``Ochiai-Barkman coefficient''.  Assumes squareness and is sensitive to ordering (ordinal).
 
@@ -962,6 +1611,18 @@ $$
 cos = \frac{ X \cdot Y }{ \|X\|\|Y\| } = \frac{  \sum_{i=0}^{R}{ X_iY_i }  }{     \sqrt{ \sum_{i=1}^{R}{X_i^2} }  \cdot  \sqrt{ \sum_{i=1}^{R}{Y_i^2} }    }
 $$
 Note that $R$ may be used to represent the length of $X$ and $Y$ due to squareness requirement.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -990,6 +1651,15 @@ $$
 
 
 
+
+
+
+
+
+
+
+
+
 \section{Euclidean Distance}
 \label{section:euclid}
 The distance between two points in vector-space as travelled directly.  Uses pythagoras to determine `direct route'.  Its limits are dependent on the data, with maximum association at 0 and minimum/negative association at TODO...  As with other vector-space methods, requires squareness.  Symmetric
@@ -998,6 +1668,16 @@ $$
 D_E = \sqrt{ \sum_{i=1}^{R}{ (Y_i - X_i)^2 } }
 $$
 Where $R$ is the number of items in $X$ and $Y$, as per Notation above.
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1022,22 +1702,41 @@ $$
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 \section{Tversky Index}
-Generalised form of Dice coefficient (itself identical to the Jaccard index and S\o renson/Czekanowski's similarity index, itself equal to one minus the Hellinger Distance and Bray Curtis dissimilarity) used in information retrieval.
+Generalised form of Dice coefficient (itself identical to the Jaccard index and S\o renson/Czekanowski's similarity index, itself equal to one minus the Hellinger Distance and Bray Curtis dissimilarity) used in information retrieval.  Asymmetric. Used for fingerprint matching.  Range is $[0, 1]$.  See \cite{tversky1977features}
+% http://www.daylight.com/dayhtml/doc/theory/theory.finger.html
 
 
 
-\section{Cochran's Statistic}
-See Section \ref{section:mantelhaenszel}.  Cochran's statistic is merely an uncorrected form.
 
-\section{Mantel-Haenszel}
-\label{section:mantelhaenszel}
-Tests conditional independence of two binary values, controlling for one or more categorical variables.  Requires ordinal data.  Based on odds ratios.  First defined in 1959 {\color{red} (though the only refernece I have thus far is from '04...)}~\cite{mantel2004statistical}.  Computed once after each 2x2 group (for $k$ groups) has itself been computed.
+For 2x2 contingency tables:
+$$
+T(Y|X) = \frac{ f_{11} }{ \alpha f_{10} + \beta f_{01} + f_{11} }
+$$
+Where $\alpha$ and $\beta$ control the weightings of false positive or negative `classification'.  Equal to the Jaccard/Tanimoto index where $\alpha = \beta = 1$, equal to the Dice index if $\alpha = \beta = 0.5$.
 
-% FROM http://www.quantitativeskills.com/sisa/statistics/two2hlp.htm#MHX
-% Mantel Heanszel Chi-square Mantel-Haenszel Chi-square is thought to be closer to the 'true' Chi-square if small numbers of cases are involved.
 
-Mantel-Haenszel's statistic is a corrected form of Cochran's, with small-sample correction and inflation of variance.
+
+
+
+
+
+
+
+
+
+
 
 
 \section{Fisher's Exact Test}
@@ -1059,8 +1758,50 @@ p = \frac{ (\prod_{i=1}^{R}{ r_i! })  (\prod_{j=1}^{C}{ c_j! }) }{ S! \prod_{i=1
 $$
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Kilgarriff's `Simple Maths'}
-Some kind of mashed frequency-normalised odds ratio, I guess.
+A ratio of normalised frequency with a minimum bound, $\alpha$ defined.  Where $\alpha$ is 0, is defined only for square input (nonzero).  Range is $[0, \infty)$.  Designed for two lists (the form used here) with frequencies set to 0 where lengths differ (overestimates differences where token type count not equal).
+
+    For the `$2\times 2$' case (\textsl{i.e.} a single item $i$), as defined in \cite{kilgarriff2009simple}, \cite{kilgarriff2012getting}:
+$$
+K_{SM_i} = \frac{ M_{X_i} + \alpha }{ M_{Y_i} + \alpha }
+$$
+Where $M_{X_i}$ is the normalised frequency (per million) for item $i$ in list $X$:
+$$
+M_{X_i} = 1,000,000\frac{ X_i }{ R }
+$$
+Similarly for $Y$:
+$$
+M_{Y_i}= 1,000,000\frac{ Y_i }{ C }
+$$
+
+Where $\alpha$ is the saturation parameter used to define which frequencies are of maximal interest.
+
+For the full list (as in presentation for \cite{kilgarriff2012getting}):
+$$
+K_{SM} = \frac{ \sum_{i \cup j}{ K_{SM_i} } }{ xc } 
+$$
+
+
+
+
+
+
+
+
+
+
 
 
 % =============================================================================
@@ -1117,7 +1858,7 @@ Some kind of mashed frequency-normalised odds ratio, I guess.
 %  2) In what contexts are the values valid?
 % =============================================================================
 
-
+\appendix
 
 \section{Deliberate Omissions}
 Some methods were omitted from the above list, yet still warrant a mention due to their relation to the above.  They are presented here primarily for justification as to their unsuitability:
@@ -1131,6 +1872,49 @@ Some methods were omitted from the above list, yet still warrant a mention due t
 
 
 
+
+\section{Table of Symbols}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Symbol} & \textbf{Comparison Method} \\ \hline
+$\rho$              & Pearson's rho \\ \hline
+$\rho_S$            & Spearman's rho \\ \hline
+$\tau_a$, $\tau_b$  & Kendall's Tau-a and -b \\ \hline
+$\tau_c$            & Stuart's Tau-c \\ \hline
+$\gamma$, G         & Goodman \& Kruskal's gamma\\ \hline
+$\kappa$            & Cohen's kappa \\ \hline
+$\kappa_F$          & Fleiss' kappa \\ \hline
+$\lambda$           & Goodman \& Kruskal's lambda\\ \hline
+$U$                 & Theil's U/Uncertainty coefficient\\ \hline
+$\tau_{GK}$         & Goodman \& Kruskal's tau\\ \hline
+$D_{KL}$            & Kullback-Leibler divergence\\ \hline
+$D$                 & Somers' D\\ \hline
+$\eta$              & Eta \\ \hline
+$\chi^2$            & Pearson's chi-squared\\ \hline
+$\phi$              & Matthews correlation coefficient\\ \hline
+$V$                 & Cram\'er's V\\ \hline
+$CC$                & Contingency coefficient \\ \hline
+$OR$                & Odds ratio\\ \hline
+$\alpha$            & Cronbach's alpha\\ \hline
+$T$                 & Tschuprow's T\\ \hline
+$F_\beta$           & F-score (where $\beta$ is the weighting parameter)\\ \hline
+$U_{MW}$            & Mann-Whitney-Wilcoxon U\\ \hline
+$D_{KS}$            & Kolmogorov-Smirnov D\\ \hline
+$\Lambda$           & Likelihood ratio\\ \hline
+$cos$               & Cosine Similarity\\ \hline
+$D_\%$              & Percentage difference \\ \hline
+$D_E$               & Euclidean distance\\ \hline
+$D_M$               & Manhattan (taxicab) distance\\ \hline
+$T_v$               & Tversky index\\ \hline
+$p$                 & Fisher's exact test score (simple probabilty)\\ \hline
+$K_{SM}$            & Kilgarriff's simple maths\\ \hline
+%$ $                & \\ \hline
+\end{tabular}
+\caption{Symbols for each method}
+\label{tab:symbols}
+\end{table}
 
 % 'The needless assumption of normality in Pearson's r' http://psycnet.apa.org/journals/amp/12/10/623/
 
