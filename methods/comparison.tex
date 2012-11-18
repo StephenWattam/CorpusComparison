@@ -20,8 +20,24 @@
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{lscape}
+
+% Config
+\graphicspath{{./images/}}
+\hypersetup{
+    colorlinks=true,
+    bookmarks=true,
+    unicode=true,
+    linkcolor=black,
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black
+}
 
 \begin{document}
+
 
 
 \title{A Comparison Comparison:\\
@@ -94,15 +110,21 @@ $$
 Y_1 < Y_2 < ... < Y_C
 $$
 
+\begin{figure}[h]
+\centering
+  \includegraphics[draft,width=8cm,height=5cm]{crosstab.eps}%
+  \caption{Crosstabulation of $X$ and $Y$}
+  \label{fig:crosstab}
+\end{figure}
 
-For some measures, these will be crosstabulated into $R$ rows and $C$ columns.  $f_{ij}$ represents the value at the $i$th column and $j$th row.  Marginal sums are given by 
+For some measures, these will be crosstabulated into $R$ rows and $C$ columns, as illustrated in Figure~\ref{fig:crosstab}.  $f_{ij}$ represents the value at the $i$th column and $j$th row.  Marginal sums are given by 
 $$ c_j = \sum_{i=1}^{R}f_{ij} $$ for the column total, and $$ r_i = \sum_{j=1}^{C}f_{ij} $$.  The grand sum is represented by $$S = \sum_{i=1}^{R}r_i = \sum_{j=1}^{C}c_i $$
 
 
 \subsubsection{Pairs}
 For measures that involve concordant or discordant pairs, they are defined as follows:
 $$
-pair = (X_i, Y_i), (X_j, Y_j); i \neq j
+pair = (X_i, Y_i), (X_j, Y_j);~~~ i \neq j
 $$
 Concordant pairs, $Q$, are such that a comparison between items $i$ and $j$ in the input lists yields the same sign:
 $$
@@ -159,8 +181,23 @@ Various methods of organising the methods in this paper prove both rational and 
 % TODO
 
 
-%
-%
+%----
+
+\subsection{Evaluation}
+Each of the measures is evaluated in the context of comparing two frequency lists, generated from text corpora, $X$ and $Y$, containing $R$ and $C$ token types respectively, and $S$ tokens collectively.
+
+The properties of these measures of association will be judged for their usefulness when applied to problems of relating human ideas about text to corpus contents, namely:
+\begin{itemize}
+    \item Identification of relative homogeneity between corpora of varying speciality;
+    \item Identification of relative heterogeniety between corpora of varying speciality;
+    \item Small-scale identification of texts from different populations;
+    \item TODO
+    \item 
+\end{itemize}
+
+
+
+
 
 % =============================================================================
 \section{Pearson's $\rho$} %name of group of statistics
@@ -824,8 +861,8 @@ Unknown, TODO
 \section{Goodman \& Kruskal's $\tau$}
 \label{section:goodmankruskaltau}
 \subsection{Description}
-Another measure of proportional reduction in error (as with Theil's $U$ and Goodman \& Kruskal's $o\lambda$).  First introduced in 1954, along with Goodman and Kruskal's other measures \cite{goodman1954measures}.
-
+Another measure of proportional reduction in error, as with Theil's $U$ (Section~\ref{section:theilu}) and Goodman \& Kruskal's $o\lambda$ (Section~\ref{goodmankruskallambda}).  First introduced in 1954, along with Goodman and Kruskal's other measures \cite{goodman1954measures}.
+According to Goodman and Kruskal, it is to be interpreted as the ``relative decrease in the proportion of incorrect predictions when we go from predicting the row category based only on the row marginal probabilities (as in Lambda) to predicting the row category based on the conditional proportions of both row and column.''
 
 % Measures proportional reduction in error, as the two above do.  
 % Used for nominal data. 
@@ -834,7 +871,6 @@ Another measure of proportional reduction in error (as with Theil's $U$ and Good
 % Produces the same results as $\phi^2$ for 2x2 tables.  
 % Ranges from 0-1, 0 being unassociated, 1 being entirely associated.  
 % Introduced in 1954~\cite{goodman1954measures}.
-According to Goodman and Kruskal, it is to be interpreted as the ``relative decrease in the proportion of incorrect predictions when we go from predicting the row category based only on the row marginal probabilities (as in Lambda) to predicting the row category based on the conditional proportions of both row and column.''
 
 
 
@@ -854,7 +890,7 @@ According to Goodman and Kruskal, it is to be interpreted as the ``relative decr
 
     % Is this method only valid under certain
     % distributional assumptions?
-    Distributional Assumptions& 2 \\ \hline
+    Distributional Assumptions& ? \\ \hline
 
     % What types of data may this run on?
     Data type & nominal \\ \hline
@@ -1094,7 +1130,7 @@ TODO: find origin of eta (citation)
     Distributional Assumptions& None \\ \hline
 
     % What types of data may this run on?
-    Data type & `nominal by interval' \\ \hline
+    Data type & nominal (independent) interval (dependent) \\ \hline
 
     % Is the method suitable for small frequencies?
     Low Frequency & Yes \\ \hline
@@ -1173,11 +1209,11 @@ Mention $\phi$ and Cram\'er's $V$, and the Contingency coefficient (based on chi
     {\bf Property} & {\bf Description} \\
     \hline
     % What values may the statistic take
-    Limits & [0, $\infty$] \\ \hline
+    Limits & $[0, \infty] \to \chi^2$  \\ \hline
 
     % Is this method only valid under certain
     % distributional assumptions?
-    Distributional Assumptions&  \\ \hline
+    Distributional Assumptions & Normal {\color{red} ?} \\ \hline
 
     % What types of data may this run on?
     Data type & nominal \\ \hline
@@ -1209,6 +1245,7 @@ $$
 % How do we compute the statistic?
 
 \subsection{Intrepretation}
+The value of the $\chi^2$ statistic follows...
 % How to intrepret the output: what does it mean?
 %  1) What range of values does it output?
 %  2) In what circumstances does/can it hit extremis?
@@ -1232,15 +1269,68 @@ $$
 
 
 
+% =============================================================================
 \section{$\phi$, (Matthews Correlation Coefficient)}
 \label{section:phi}
-An attempt to remove effects of sample size from $\chi^2$.  Symmetric. Suitable for use on nominal data (due to chisq link). % CITE PPT file (https://docs.google.com/viewer?a=v&q=cache:ZZMuGFKtHVUJ:www.stanford.edu/class/archive/anthsci/anthsci192/anthsci192.1064/handouts/6%2520contingency%2520tables.ppt+&hl=en&gl=uk&pid=bl&srcid=ADGEESiGTqYGMt9IpeVbC4volI_SsuNVvjvaf1lZ0vKM1jomiVOtr4D6gacKD-l_AV9ClME6xulbFlmUOlsz_Ptmh_h1WDUxTYGitB66xgaEzkes9g3pR44dY0_RLhVYHMzDCYbPGUjW&sig=AHIEtbRRr2n4NXo1muTnJsJmN5BWw_W5-g)
-Ranges from 0-1 for 2x2 tables, with no upper limit for larger ones.  Identical in concept to to Pearson's $\rho$ {\color{red} Does this \textbf{always} output the same result?}.
+\subsection{Description}
+An attempt to remove effects of sample size from $\chi^2$.  
+Symmetric. 
+Suitable for use on nominal data (due to chisq link). % CITE PPT file (https://docs.google.com/viewer?a=v&q=cache:ZZMuGFKtHVUJ:www.stanford.edu/class/archive/anthsci/anthsci192/anthsci192.1064/handouts/6%2520contingency%2520tables.ppt+&hl=en&gl=uk&pid=bl&srcid=ADGEESiGTqYGMt9IpeVbC4volI_SsuNVvjvaf1lZ0vKM1jomiVOtr4D6gacKD-l_AV9ClME6xulbFlmUOlsz_Ptmh_h1WDUxTYGitB66xgaEzkes9g3pR44dY0_RLhVYHMzDCYbPGUjW&sig=AHIEtbRRr2n4NXo1muTnJsJmN5BWw_W5-g)
+Ranges from 0-1 for 2x2 tables, with no upper limit for larger ones.  
+Identical in concept to to Pearson's $\rho$ {\color{red} Does this \textbf{always} output the same result?}.
 
 Mathews' correlation coefficient was designed for use with classifiers' confusion matrices, and is essentially the same form expressed in terms of classifier output (accuracy, precision, recall \textsl{etc.}). 
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & Depends on table size: $[-1, 1]$ for $2\times 2$, $[-1, \infty]$ general \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 $$
 \phi = \sqrt{ \frac{\chi^2}{S} }
 $$
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1253,12 +1343,67 @@ $$
 
 
 
+% =============================================================================
 \section{Cram\'er's $V$}
-A standardisation of $\phi^2$.  Ranges from 0 to 1, 0 being no association, 1 being complete.  Identical to Tschuprow's T for square tables.  Cram\'er's $V$ doesn't require a square table.  Suitable for use on nominal data (due to chisq link).
+\label{section:cramersv}
+\subsection{Description}
+A standardisation of $\phi^2$ (Section~\ref{section:phi}).  
+Ranges from 0 to 1, 0 being no association, 1 being complete.  
+Identical to Tschuprow's T for square tables.  
+Cram\'er's $V$ doesn't require a square table.  
+Suitable for use on nominal data (due to chisq link).
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 $$
 V = \sqrt{ \frac{ \chi^2 }{ S( m - 1 )} }
 $$
-Where $m$ is the smaller of the two table dimensions, $min(R, C)$  (and $S$ is my convention, the number of cases/grand sum).
+Where $m$ is the smaller of the two table dimensions, $\inf(R, C)$  (and $S$ is my convention, the number of cases/grand sum).
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1274,11 +1419,66 @@ Where $m$ is the smaller of the two table dimensions, $min(R, C)$  (and $S$ is m
 
 
 
-\section{Contingency Coefficient}
-Another statistic that corrects $\chi^2$ for non-2x2 table sizes.  As such it's used on nominal data.  Maximum value depends on the size of the table, being 0.707 for 2x2 tables, 0.87 for a 4x4 table etc.  
+% =============================================================================
+\section{Pearson's Contingency Coefficient}
+\label{section:contingencycoefficient}
+\subsection{Description}
+Another statistic that corrects $\chi^2$ for non-2x2 table sizes.  
+As such it's used on nominal data.  
+Maximum value depends on the size of the table, being 0.707 for 2x2 tables, 0.87 for a 4x4 table etc.  
+Scale invariant for $S$, but not for $R$ or $C$ (sensitive to table size changes but not sample size).
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & 8 \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+% http://www.itl.nist.gov/div898/software/dataplot/refman2/auxillar/pearcont.htm
 $$
 CC = \sqrt{ \frac{ \chi^2 }{ \chi^2 + S } }
 $$
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1293,12 +1493,51 @@ $$
 
 
 
+% =============================================================================
 \section{Odds Ratio}
 \label{section:oddsratio}
+\subsection{Description}
 A measure of an increase in $Y$ given an increase in $X$. % TODO: find original explanation
-Usually computed only for 2x2 tables, it's possible to extend odds ratio computations by generating many 2x2 contingency tables (category $k$ vs. not category $k$).  Suitablke for nominal data.  % http://www.john-uebersax.com/stat/odds.htm#extens loglinear association recommended instead in multi-category case
-Log odds most often used instead, making for simple confidence interval computations.  It's computed as the ratio of the odds of something occurring in one category to the odds of occurrance in another category.  Range of $[0-\infty)$, above one is positive relationship, below 1 is negative association, 1 is no association (log odds normalises this to $[-\infty, \infty]$ around 0 as the centre-point).  Symmetric.  For an $R$ by $C$ table, there are $(R-1)(C-1)$ non-redundant odds ratios.  Log-odds is slightly more conservative than Yule's Q.
+Usually computed only for 2x2 tables, it's possible to extend odds ratio computations by generating many 2x2 contingency tables (category $k$ vs. not category $k$).  Suitable for nominal data.  % http://www.john-uebersax.com/stat/odds.htm#extens loglinear association recommended instead in multi-category case
+Log odds most often used instead, making for simple confidence interval computations.  
+It's computed as the ratio of the odds of something occurring in one category to the odds of occurrance in another category.  
+Range of $[0-\infty)$, above one is positive relationship, below 1 is negative association, 1 is no association (log odds normalises this to $[-\infty, \infty]$ around 0 as the centre-point).  
+Symmetric.  
+For an $R$ by $C$ table, there are $(R-1)(C-1)$ non-redundant odds ratios.  
+Log-odds is slightly more conservative than Yule's Q (Section~\ref{section:yulesq}).
 
+
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & $[0, \infty]$ `raw' (TODO: Ahrg, stupid memory, what is this called!?), $[-\infty, \infty]$ logged \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& ? \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No {\color{red} hmm check this for the context} \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & 8 \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 The formula for odds ratios in a $2\times 2$ context is (in this case, ratio of row 1 to row 2):
 $$
 OR = {   \frac{ f_{1\cdot} }{ (1-f_{1\cdot}) }   \bigg /  \frac{ f_{2\cdot} }{ (1-f_{2\cdot}) }        }
@@ -1317,6 +1556,23 @@ See Mantel-Haenszel, it's just the average of odds ratios, but the notation migh
 %$$
 %OR = \dfrac{f_{kk}f_{\not k\not k}}{f_{k \not k}f_{\not k k}}
 %$$
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1330,15 +1586,68 @@ See Mantel-Haenszel, it's just the average of odds ratios, but the notation migh
 
 
 
+% =============================================================================
 \section{Yule's $Q$}
-This is a normalisation of the odds ratio in Section~\ref{section:oddsratio} to vary between -1 and 1.  See also Log Odds ratios, which do a similar thing (making the OR vary around 0).
+\label{section:yulesq}
+\subsection{Description}
+This is a normalisation of the odds ratio in Section~\ref{section:oddsratio} to vary between -1 and 1.  
+See also Log Odds ratios, which do a similar thing (making the OR vary around 0).
+
+
+
+
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 $$
 Q = \frac{OR - 1}{OR + 1}
 $$
 Where $OR$ is the odds ratio (see Section~\ref{section:oddsratio}) of the data.
+% How do we compute the statistic?
 
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
 
-
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1355,10 +1664,52 @@ Where $OR$ is the odds ratio (see Section~\ref{section:oddsratio}) of the data.
 \section{Cochran's Statistic}
 See Section \ref{section:mantelhaenszel}.  Cochran's statistic is merely an uncorrected form.
 
+% =============================================================================
 \section{Mantel-Haenszel}
 \label{section:mantelhaenszel}
-Tests conditional independence of two binary values, controlling for one or more categorical variables.  Requires ordinal data.  Based on odds ratios.  First defined in 1959 {\color{red} (though the only refernece I have thus far is from '04...)}~\cite{mantel2004statistical}.  Computed once after each 2x2 group (for $k$ groups) has itself been computed.  Assumes squareness, but items could be replaced with 0s.
+\subsection{Description}
+Tests conditional independence of two binary values, controlling for one or more categorical variables.  
+Requires ordinal data {\color{red} Why? If this is simply a load of means of odds ratios...}.  
+Based on odds ratios (Section~\ref{section:oddsratio}).  
+First defined in 1959 {\color{red} (though the only refernece I have thus far is from '04...)}~\cite{mantel2004statistical}.  
+Computed once after each 2x2 group (for $k$ groups) has itself been computed.  
+Assumes squareness, but items could be replaced with 0s.
 Mantel-Haenszel's statistic is a corrected form of Cochran's, with small-sample correction and inflation of variance.
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal, ordinal, interval, ratio \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & 8 \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 % FROM http://www.quantitativeskills.com/sisa/statistics/two2hlp.htm#MHX
 % Mantel Heanszel Chi-square Mantel-Haenszel Chi-square is thought to be closer to the 'true' Chi-square if small numbers of cases are involved.
 
@@ -1386,6 +1737,19 @@ This is simply the weighted average of the odds ratios from each stratum.  Note 
 $$
 OR_{MH} = \frac{ { \sum_{i=0}^{R}{ X_i ¬Y_i } / S } }{ { \sum_{i=0}^{R}{ ¬X_i Y_i } / S} }
 $$
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1401,12 +1765,55 @@ $$
 
 
 
+% =============================================================================
 \section{Cronbach's $\alpha$}
-Commonly used as a measure of reliability/`internal consistency' of psychometric tests.  First named $\alpha$ in 1951, and is an extension of the Kuder-Richardson Formula 20, an equivalent measure for binary data( \textsl{i.e.} $2\times 2$ tables).  Related to the Spearman-Brown prediction formula, and factor analysis.  Varies from 0 to 1 normally, or, strictly, in the range $(-\infty, 1]$, though according to Ritter~\cite{ritter2010understanding}, can vary below 0~in some circumstances {\color{red} (which? this \cite{cronbachalphanegative} )}. \cite{bland1997statistics}
+\label{section:cronbachalpha}
+\subsection{Description}
+Commonly used as a measure of reliability/`internal consistency' of psychometric tests \cite{schmitt1996uses} (it was originally designed for this too).  
+First named $\alpha$ in 1951~\cite{cronbach1951coefficient}, and is an extension of the Kuder-Richardson Formula 20, an equivalent measure for binary data( \textsl{i.e.} $2\times 2$ tables).
+Related to the Spearman-Brown prediction formula, and factor analysis.  
+Varies from 0 to 1 normally, or, strictly, in the range $(-\infty, 1]$, though according to Ritter~\cite{ritter2010understanding}, can vary below 0~in some circumstances {\color{red} (which? this \cite{cronbachalphanegative} )}. \cite{bland1997statistics}
 % http://srmo.sagepub.com/view/the-sage-dictionary-of-statistics/n13.xml
 % http://www.ats.ucla.edu/stat/spss/faq/alpha.html
 
-Cronbach's $\alpha$ is generally used to test agreement between scales, and as such is often phrased in terms of tests and scores.  For these formulae, each row will be one `question' or `testlet', with the columns representing multiple scores for each.  In this case, the numerator represents the sum of row variances, whilst the denominator is the total variance.
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & $(-\infty, 1]$, typically remains above 0 \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency &  \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions &  \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+Cronbach's $\alpha$ is generally used to test agreement between scales, and as such is often phrased in terms of tests and scores.  
+For these formulae, each row will be one `question' or `testlet', with the columns representing multiple scores for each.  
+In this case, the numerator represents the sum of row variances, whilst the denominator is the total variance.
 $$
 \alpha = \frac{ R }{ R - 1 }   \left( 1 - \frac{ \sum_{i=1}^{R}{ \sigma_{f_{i\cdot}}^2 }    }{  \sigma_{S}^2  } \right) 
 $$
@@ -1415,6 +1822,19 @@ $$
 \alpha = \frac{ R\bar{c} }{ \bar{v} + (R - 1)\bar{c} }
 $$
 Where $\bar{v}$ is the mean variance for each row, and $\bar{c}$ is the mean covariance between the components across the 'current sample of persons' {\color{red} Does this mean columns?}
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1429,8 +1849,50 @@ Where $\bar{v}$ is the mean variance for each row, and $\bar{c}$ is the mean cov
 
 
 
+% =============================================================================
 \section{Tschuprow's $T$}
-For nominal data.  Range between 0 and 1, 0 where no association, 1 where full association.  Can only achieve 1 for square tables. Identical to Cram\'er's $V$ for square tables.  Based on $\phi^2$.
+\label{section:tschuprowt}
+\subsection{Description}
+For nominal data.  
+Range between 0 and 1, 0 where no association, 1 where full association.  
+Can only achieve 1 for square tables. 
+Identical to Cram\'er's $V$ for square tables.  
+Based on $\phi^2$ (Section~\ref{section:phi}).
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No, but changes limits \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 $$
 T = \sqrt{ \frac{ \phi^2 }{ \sqrt{ (R-1)(C-1) } } }
 $$
@@ -1439,6 +1901,19 @@ $$
 \phi^2 = \frac{\chi^2}{n}
 $$
 as in Section~\ref{section:phi}
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1456,9 +1931,53 @@ as in Section~\ref{section:phi}
 
 
 
+% =============================================================================
 \section{$F_\beta$-score}
-Applicable as classifier output, hence binary data (confusion matrix).  May be extended by applying in turn to each category, as with other methods here.  Represents the capacity of the independent variable as a predictor of the dependent.  May be weighted (by changing $\beta$) to change importance of precision or recall.  Does not take into account true negative rate (which is arguably good for text comparison).
+\label{section:fscore}
+\subsection{Description}
+Applicable as classifier output, hence binary data (confusion matrix).  
+May be extended by applying in turn to each category, as with other methods here.  
+Represents the capacity of the independent variable as a predictor of the dependent.  
+May be weighted (by changing $\beta$) to change importance of precision or recall.  
+Does not take into account true negative rate (which is arguably good for text comparison).
+Based on van Rijsbergen's effectiveness measure.
+Introduced in 1979~\cite{Rijsbergen1979IR539927}.
 
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & ? \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& 2 \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal, ordinal, interval, ratio \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & 8 \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & 8 \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & ? \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 $F_\beta$ is defined in terms of a confusion matrix, which, mapped onto a $2\times 2$ contingency table, resolves to:
 $$
 precision = \frac{ f_{11} }{ f_{11} + f_{12} }
@@ -1476,6 +1995,19 @@ $$
 Where $\beta$ defines the importance of recall relative to precision (twice as important where $\beta = 2$).
 
 TODO: write form for use with non-2x2 types.
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1489,10 +2021,54 @@ TODO: write form for use with non-2x2 types.
 
 
 
+% =============================================================================
 \section{Mann-Whitney-Wilcoxon $U$}
-Used for hypothesis testing.  Large samples see $U$ to be normally distributed.  Equivalent to Kendall's $\tau$ where one variable is binary.  suitable for use with ordinal data.  Works on ranked data.  Works by ranking data and then inspecting the distribution of each input list within the rankings.  $U$ follows the normal distribution, and is more of a formal test statistic than many on this list, so technically its limits are $[-\infty, \infty]$.  Is a variant of the Wilcoxon signed-rank test without the assumption that both input variables come from the same population.
+\label{section:mannwhitney}
+\subsection{Description}
+Used for hypothesis testing.  
+Large samples see $U$ to be normally distributed.  
+Equivalent to Kendall's $\tau$ where one variable is binary.  
+suitable for use with ordinal data.  
+Works on ranked data.  
+Works by ranking data and then inspecting the distribution of each input list within the rankings.  
+$U$ follows the normal distribution, and is more of a formal test statistic than many on this list, so technically its limits are $[-\infty, \infty]$.  
+Is a variant of the Wilcoxon signed-rank test without the assumption that both input variables come from the same population.
 
-\subsection{Procedure}
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & $[\infty, \infty] \to Normal(?, ?)$ \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions & monotonicity \\ \hline
+
+    % What types of data may this run on?
+    Data type & ordinal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 First, frequency lists $X$ and $Y$ are combined into a single list, $N$ (the information regarding which point is from which list is used later).  $N$ is then replaced with its rank (including means for ties, as in Section~\ref{section:spearman}).
 
 $U$ is computed on either list, and is the proportion of ranks that appear within the list, relative to the size of the list itself.  If this is 0.5, we know the data is randomly distributed:
@@ -1507,6 +2083,19 @@ $$
 \sigma = \sqrt{  \frac{  RC(R + C + 1)  }{  12 } }
 $$
 For small values of $R$ or $C$, the approximation is invalid.
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1521,14 +2110,70 @@ For small values of $R$ or $C$, the approximation is invalid.
 
 
 
+% =============================================================================
 \section{Kolmogorov-Smirnov's $D$}
-Used to compare frequency distributions.  Works by taking the maximum distance between the cumulative distribution of two variables.  Requires ordinal data.  Unaffected by scale changes, but then most of these probably are.  Requires squareness.  $D_{KS}$'s limits can be looked up in critical value tables for a given sample size (though this assumes normality {\color{red} check that}, but its limits are defined in terms of the original data.
+\label{section:kolmorogorvsmirnovd}
+\subsection{Description}
+Used to compare frequency distributions.  
+Works by taking the maximum distance between the cumulative distribution of two variables.  
+Requires ordinal data.  
+Unaffected by scale changes, but then most of these probably are.  
+Requires squareness.  
+$D_{KS}$'s limits can be looked up in critical value tables for a given sample size (though this assumes normality {\color{red} check that}, but its limits are defined in terms of the original data.
 
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & Greatest category value: $[0, \sup(X, Y)]$ \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions & None \\ \hline
+
+    % What types of data may this run on?
+    Data type & ordinal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No, but 0-padding will change score \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 Computed as the proportion of the difference in cumulative distribution between $X$ and $Y$.
 $$
 D_{KS} = \sup_{i=1}^{R}\left[ \frac{ X_i }{ \sum{X} } - \frac{Y_i}{ \sum{Y} } \right]
 $$
 Note that $X$ and $Y$ are ordered, as in the Notation section, and due to the squareness requirement $R$ is the length of both $X$ and $Y$.
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1545,9 +2190,51 @@ Note that $X$ and $Y$ are ordered, as in the Notation section, and due to the sq
 
 
 
+% =============================================================================
 \section{Log-Likelihood Ratio}
-Suitable for use on nominal data.  $\Lambda$ used to represent.  Can be used to compare two arbitrary models based on their likelihoods.  Used for the Wilks test with contingency tables because $-2ln(\Lambda) \to \chi^2$ as $S \to \infty$ (with d.f. equal to the difference in dimensionality between null and alternative models, in thic case $|R-C|$.)  Likelihood ratios must be above a given threshold to indicate significant differences between models, but they vary within the range $[0, 1]$---at 0, the alternative model was not at all possible (no agreement), at 1 it was as likely to occur as the null model (full agreement).
+\label{section:loglikelihood}
+\subsection{Description}
+Suitable for use on nominal data.  
+$\Lambda$ used to represent.  
+Can be used to compare two arbitrary models based on their likelihoods.  
+Used for the Wilks test with contingency tables because $-2ln(\Lambda) \to \chi^2$ as $S \to \infty$ (with d.f. equal to the difference in dimensionality between null and alternative models, in thic case $|R-C|$.)  
+Likelihood ratios must be above a given threshold to indicate significant differences between models, but they vary within the range $[0, 1]$---at 0, the alternative model was not at all possible (no agreement), at 1 it was as likely to occur as the null model (full agreement).
 
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & $[0, \infty] \to \chi^2$ \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions&  \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & No \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes (0-padding) \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 % From http://www.quantitativeskills.com/sisa/statistics/two2hlp.htm#LRX
 % The LRX has the important property that an LRX with more than one degree of freedom can be partialised into a number of smaller tables each with its own (smaller) LRX and (lower numbers of) degrees of freedom. The sum of the partial LRXs and associated partial degrees of freedom, as found in the smaller tables, equals the original LRX and original number of degrees of freedom.
 
@@ -1555,19 +2242,6 @@ The general model comparison may be written as:
 $$
 D = -2ln \left( \frac{ likelihood~of~null~model }{ likelihood~of~alternative~model } \right)
 $$
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \subsubsection{Wilks' Statistic}
 Performed on contingency tables (for computation of the Wilks' statistic $W$):
@@ -1587,6 +2261,19 @@ $$
 TODO: perhaps try to phrase this without going via Wilks', it may make the computation easier or less lossy.
 
 
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1601,9 +2288,60 @@ TODO: perhaps try to phrase this without going via Wilks', it may make the compu
 
 
 
+
+
+
+
+
+
+
+
+
+
+% =============================================================================
 \section{Cosine Similarity}
-A measure of angular similarity using a vector space model.  Often used in data/text mining.  Ranges from -1 to 1, with -1 being precise negative relationship and 1 being identical data (0 is independence).  Known in biology by the names ``Ochai coefficient'' or ``Ochiai-Barkman coefficient''.  Assumes squareness and is sensitive to ordering (ordinal).
+\label{section:cosine}
+\subsection{Description}
+A measure of angular similarity using a vector space model.  
+Often used in data/text mining.  
+Ranges from -1 to 1, with -1 being precise negative relationship and 1 being identical data (0 is independence).  
+Known in biology by the names ``Ochai coefficient'' or ``Ochiai-Barkman coefficient''.  
+Assumes squareness and is sensitive to ordering (ordinal).
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
 
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-1, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions&  \\ \hline
+
+    % What types of data may this run on?
+    Data type & ordinal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 May be computed using the euclidean dot product of two vectors.  See also euclidean distance, Manhattan distance below (Sections~\ref{section:euclid}\ref{section:manhattan} respectively).
 
 It may be computed thus:
@@ -1611,6 +2349,20 @@ $$
 cos = \frac{ X \cdot Y }{ \|X\|\|Y\| } = \frac{  \sum_{i=0}^{R}{ X_iY_i }  }{     \sqrt{ \sum_{i=1}^{R}{X_i^2} }  \cdot  \sqrt{ \sum_{i=1}^{R}{Y_i^2} }    }
 $$
 Note that $R$ may be used to represent the length of $X$ and $Y$ due to squareness requirement.
+
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1630,22 +2382,75 @@ Note that $R$ may be used to represent the length of $X$ and $Y$ due to squarene
 
 
 % Distances
+% =============================================================================
 \section{Percentage Score (Normalised) Difference}
 \label{section:percentage}
-The percentage of an entry in $X$, minus the percentage of an entry in $Y$.  Asymmetric unless the sign is deliberately discarded {\color{red} is this done often?}.  Doesn't adjust for the probability of association by chance.  Assumes squareness in this form (could be padded with 0s).  Varies in the range $[0-100]$ in the \% age form, where 0\% is perfect similarity of proportions, and 100\% is total difference.
+\subsection{Description}
+The percentage of an entry in $X$, minus the percentage of an entry in $Y$.  
+Asymmetric unless the sign is deliberately discarded {\color{red} is this done often?}.  
+Doesn't adjust for the probability of association by chance.  
+Assumes squareness in this form (could be padded with 0s).  
+Varies in the range $[0-100]$ in the \% age form, where 0\% is perfect similarity of proportions, and 100\% is total difference.
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
 
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [-100, 100] asymmetric, [0, 100] symmetric\\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& None \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes (0-padding rational) \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Optional \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 This is simply the difference in proportions each corresponding item in lists $X$ and $Y$:
 
 \subsubsection{Asymmetric}
 $$
-D_\%(Y|X) = { \sum_{i=0}^{R}{ \left(  \frac{X_i}{\sum{X}} - \frac{Y_i}{\sum{Y}} \right) }  \bigg / (100R) }
+D_\%(Y|X) = { 100 \sum_{i=0}^{R}{ \left(  \frac{X_i}{\sum{X}} - \frac{Y_i}{\sum{Y}} \right) }  \bigg / R }
 $$
 Clearly, divide this by 100 to get a scale from 0-1.  $R$ is used above under squareness assumptions that it represents the length of $X$ and $Y$.
 
 \subsubsection{Symmetric}
 $$
-D_\%(Y|X) = { \sum_{i=0}^{R}{ \left|  \frac{X_i}{\sum{X}} - \frac{Y_i}{\sum{Y}} \right| }  \bigg / (100R) }
+D_\%(Y|X) = { 100 \sum_{i=0}^{R}{ \left|  \frac{X_i}{\sum{X}} - \frac{Y_i}{\sum{Y}} \right| }  \bigg / R }
 $$
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1660,15 +2465,73 @@ $$
 
 
 
+% =============================================================================
 \section{Euclidean Distance}
 \label{section:euclid}
-The distance between two points in vector-space as travelled directly.  Uses pythagoras to determine `direct route'.  Its limits are dependent on the data, with maximum association at 0 and minimum/negative association at TODO...  As with other vector-space methods, requires squareness.  Symmetric
+\subsection{Description}
+The distance between two points in vector-space as travelled directly.  
+Uses pythagoras to determine `direct route'.  
+Its limits are dependent on the data, with maximum association at 0 and minimum/negative association at TODO...  
+As with other vector-space methods, requires squareness.  
+Asymmetric, but only the sign varies (as above)
+{\color{red} should I make this into two formulae as above? probably, yes. TODO}
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
 
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & umm, $\pm (\sum{X} + \sum{Y}) $ I think. \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& None \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes (0-padding possible) \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & No (sign varies) \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+
+\subsubsection{Asymmetric}
 $$
 D_E = \sqrt{ \sum_{i=1}^{R}{ (Y_i - X_i)^2 } }
 $$
 Where $R$ is the number of items in $X$ and $Y$, as per Notation above.
 
+\subsubsection{Symmetric}
+ TODO!
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1681,12 +2544,53 @@ Where $R$ is the number of items in $X$ and $Y$, as per Notation above.
 
 
 
+
+% =============================================================================
 \section{Manhattan/Taxicab Distance}
 \label{section:manhattan}
-Also known as squared Euclidiean distance, for obvious reasons.  Equivalent to travelling between two points in vector space by moving only orthogonal to axes, in two dimensions this looks like the route a taxi would take around a grid system.  It is an un-normalised form of Percentage score difference (Section~\ref{section:percentage}).  Requires squareness.  Asymmetric, but can be symmetric by disregarding the sign.
+\subsection{Description}
+Also known as squared Euclidiean distance, for obvious reasons.  
+Equivalent to travelling between two points in vector space by moving only orthogonal to axes, in two dimensions this looks like the route a taxi would take around a grid system.  
+It is an un-normalised form of Percentage score difference (Section~\ref{section:percentage}).  
+Requires squareness.  
+Asymmetric, but can be symmetric by disregarding the sign.
  
 Varies between 0 (full agreement) and $\sum{X} + \sum{Y}$ (total difference). Is often {\color{red}  check!} normalised by discarding the sign.
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
 
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & umm, $\pm (\sum{X} + \sum{Y}) $ I think. \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& None \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes (0-padding possible) \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & No (sign varies) \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
 {\color{red} TODO: fix sum(X) into common notation (row/column sums)}
 \subsubsection{Asymmetric}
 $$
@@ -1698,6 +2602,19 @@ Where $R$ is the number of items in $X$ and $Y$, as per Notation above.
 $$
 D_M = \sum_{i=1}^{R}{ |Y_i - X_i| }
 $$
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1713,19 +2630,72 @@ $$
 
 
 
+% =============================================================================
 \section{Tversky Index}
-Generalised form of Dice coefficient (itself identical to the Jaccard index and S\o renson/Czekanowski's similarity index, itself equal to one minus the Hellinger Distance and Bray Curtis dissimilarity) used in information retrieval.  Asymmetric. Used for fingerprint matching.  Range is $[0, 1]$.  See \cite{tversky1977features}
+\label{section:tverskyindex}
+\subsection{Description}
+Generalised form of Dice coefficient (itself identical to the Jaccard index and S\o renson/Czekanowski's similarity index, itself equal to one minus the Hellinger Distance and Bray Curtis dissimilarity) used in information retrieval.  
+Asymmetric. 
+Used for fingerprint matching.  
+Range is $[0, 1]$.  
+See \cite{tversky1977features}
 % http://www.daylight.com/dayhtml/doc/theory/theory.finger.html
 
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& ? \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions &  \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & No \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
 
 
-
+\subsection{Formula}
 For 2x2 contingency tables:
 $$
 T(Y|X) = \frac{ f_{11} }{ \alpha f_{10} + \beta f_{01} + f_{11} }
 $$
 Where $\alpha$ and $\beta$ control the weightings of false positive or negative `classification'.  Equal to the Jaccard/Tanimoto index where $\alpha = \beta = 1$, equal to the Dice index if $\alpha = \beta = 0.5$.
 
+TODO: non-2x2 form.
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1739,14 +2709,57 @@ Where $\alpha$ and $\beta$ control the weightings of false positive or negative 
 
 
 
+
+% =============================================================================
 \section{Fisher's Exact Test}
-Only usable on 2 $\times$ 2 matrices, though one is available for $2\times 3$ tables too (may be repeated with $k$ categories as with other methods with this restriction.).
+\label{section:fisherexact}
+\subsection{Description}
+Designed for 2 $\times$ 2 matrices, though one is available for $2\times 3$ tables too (may be repeated with $k$ categories as with other methods with this restriction.).
 % Wikipedia: However the principle of the test can be extended to the general case of an m × n table,[7][8] and some statistical packages provide a calculation (sometimes using a Monte Carlo method to obtain an approximation)
 % [7] -> Mehta C.R., Patel N.R. (1983). "A Network Algorithm for Performing Fisher's Exact Test in r Xc Contingency Tables". Journal of the American Statistical Association
 % [8] -> http://mathworld.wolfram.com/FishersExactTest.html
-May be hard to compute for large values due to its enumeration of combinatoric explosion.  Suitable for small values.  Used for categorical data.  Tests for independence, similar to $\chi^2$ (only exact mathematically). 
-% http://srmo.sagepub.com/view/the-sage-dictionary-of-statistics/n213.xml
+May be hard to compute for large values due to its enumeration of combinatoric explosion.  
+Suitable for small values.  
+Used for categorical data.  
+Tests for independence, similar to $\chi^2$ (only exact). 
+Introduced by Fisher in 1922~\cite{fisher1922interpretation}.
 
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & [0, 1] \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions&  \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Yes \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & No \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & Yes \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+% http://srmo.sagepub.com/view/the-sage-dictionary-of-statistics/n213.xml
 In the $2\times 2$ form, it is computed as:
 $$
 p = \frac{ r_1!r_2!c_1!c_2! }{ f_{11}!f_{12}!f_{21}!f_{22}!S! }
@@ -1756,6 +2769,19 @@ Generalised to $R\times C$, this becomes:
 $$
 p = \frac{ (\prod_{i=1}^{R}{ r_i! })  (\prod_{j=1}^{C}{ c_j! }) }{ S! \prod_{i=1}^{R}{  \prod_{j=1}^{C}{ f_{ij}! }}    }
 $$
+% How do we compute the statistic?
+
+\subsection{Intrepretation}
+% How to intrepret the output: what does it mean?
+%  1) What range of values does it output?
+%  2) In what circumstances does/can it hit extremis?
+%  3) What does the number mean re. the data?
+
+\subsection{Critical Values}
+% Is it possible to find critical values for this measure?
+%  1) If so, how? (brief mention is adequate for now)
+%  2) In what contexts are the values valid?
+% =============================================================================
 
 
 
@@ -1768,14 +2794,53 @@ $$
 
 
 
-
-
+% =============================================================================
 \section{Kilgarriff's `Simple Maths'}
-A ratio of normalised frequency with a minimum bound, $\alpha$ defined.  Where $\alpha$ is 0, is defined only for square input (nonzero).  Range is $[0, \infty)$.  Designed for two lists (the form used here) with frequencies set to 0 where lengths differ (overestimates differences where token type count not equal).
+\subsection{Description}
+A ratio of normalised frequency with a minimum bound, $\alpha$ defined.  
+Where $\alpha$ is 0, is defined only for square input (nonzero).  
+Range is $[0, \infty)$.  
+Designed for two lists (the form used here) with frequencies set to 0 where lengths differ (overestimates differences where token type count not equal).
 
-    For the `$2\times 2$' case (\textsl{i.e.} a single item $i$), as defined in \cite{kilgarriff2009simple}, \cite{kilgarriff2012getting}:
+
+% Describe the rationale behind the measure:
+%  1) Who developed it, when?
+%  2) Why? What field was it originally developed for?
+%  3) To solve what problem?
+
+\subsection{Properties}
+\begin{tabular}{| l || l |}
+    \hline
+    {\bf Property} & {\bf Description} \\
+    \hline
+    % What values may the statistic take
+    Limits & $[0, \alpha]$ \\ \hline
+
+    % Is this method only valid under certain
+    % distributional assumptions?
+    Distributional Assumptions& None \\ \hline
+
+    % What types of data may this run on?
+    Data type & nominal \\ \hline
+
+    % Is the method suitable for small frequencies?
+    Low Frequency & Sensitivity $\propto \alpha$ \\ \hline
+
+    % Is the method suitable for nonsquare comparisons?
+    Squareness Assumptions & Yes (0-padding possible) \\ \hline
+    
+    % Is the method symmetric?
+    Symmetry? & ? \\ \hline
+
+    % Finally, any other assumptions
+    % x & x \\ \hline
+\end{tabular}
+
+
+\subsection{Formula}
+For the `$2\times 2$' case (\textsl{i.e.} a single item $i$), as defined in \cite{kilgarriff2009simple}, \cite{kilgarriff2012getting}:
 $$
-K_{SM_i} = \frac{ M_{X_i} + \alpha }{ M_{Y_i} + \alpha }
+K_{\alpha_i} = \frac{ M_{X_i} + \alpha }{ M_{Y_i} + \alpha }
 $$
 Where $M_{X_i}$ is the normalised frequency (per million) for item $i$ in list $X$:
 $$
@@ -1790,60 +2855,8 @@ Where $\alpha$ is the saturation parameter used to define which frequencies are 
 
 For the full list (as in presentation for \cite{kilgarriff2012getting}):
 $$
-K_{SM} = \frac{ \sum_{i \cup j}{ K_{SM_i} } }{ xc } 
+K_{\alpha} = \frac{ \sum_{i \cup j}{ K_{\alpha_i} } }{ xc } 
 $$
-
-
-
-
-
-
-
-
-
-
-
-
-% =============================================================================
-%                               <template>
-% =============================================================================
-\section{Template} %name of group of statistics
-\subsection{Description}
-% Describe the rationale behind the measure:
-%  1) Who developed it, when?
-%  2) Why? What field was it originally developed for?
-%  3) To solve what problem?
-
-\subsection{Properties}
-\begin{tabular}{| l || l |}
-    \hline
-    {\bf Property} & {\bf Description} \\
-    \hline
-    % What values may the statistic take
-    Limits & [-1, 1] \\ \hline
-
-    % Is this method only valid under certain
-    % distributional assumptions?
-    Distributional Assumptions& 2 \\ \hline
-
-    % What types of data may this run on?
-    Data type & nominal, ordinal, interval, ratio \\ \hline
-
-    % Is the method suitable for small frequencies?
-    Low Frequency & 8 \\ \hline
-
-    % Is the method suitable for nonsquare comparisons?
-    Squareness Assumptions & 8 \\ \hline
-    
-    % Is the method symmetric?
-    Symmetry? & Yes \\ \hline
-
-    % Finally, any other assumptions
-    % x & x \\ \hline
-\end{tabular}
-
-
-\subsection{Formula}
 % How do we compute the statistic?
 
 \subsection{Intrepretation}
@@ -1857,6 +2870,71 @@ $$
 %  1) If so, how? (brief mention is adequate for now)
 %  2) In what contexts are the values valid?
 % =============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+% % =============================================================================
+% %                               <template>
+% % =============================================================================
+% \section{Template} %name of group of statistics
+% \subsection{Description}
+% % Describe the rationale behind the measure:
+% %  1) Who developed it, when?
+% %  2) Why? What field was it originally developed for?
+% %  3) To solve what problem?
+% 
+% \subsection{Properties}
+% \begin{tabular}{| l || l |}
+%     \hline
+%     {\bf Property} & {\bf Description} \\
+%     \hline
+%     % What values may the statistic take
+%     Limits & [-1, 1] \\ \hline
+% 
+%     % Is this method only valid under certain
+%     % distributional assumptions?
+%     Distributional Assumptions& 2 \\ \hline
+% 
+%     % What types of data may this run on?
+%     Data type & nominal, ordinal, interval, ratio \\ \hline
+% 
+%     % Is the method suitable for small frequencies?
+%     Low Frequency & 8 \\ \hline
+% 
+%     % Is the method suitable for nonsquare comparisons?
+%     Squareness Assumptions & 8 \\ \hline
+%     
+%     % Is the method symmetric?
+%     Symmetry? & Yes \\ \hline
+% 
+%     % Finally, any other assumptions
+%     % x & x \\ \hline
+% \end{tabular}
+% 
+% 
+% \subsection{Formula}
+% % How do we compute the statistic?
+% 
+% \subsection{Intrepretation}
+% % How to intrepret the output: what does it mean?
+% %  1) What range of values does it output?
+% %  2) In what circumstances does/can it hit extremis?
+% %  3) What does the number mean re. the data?
+% 
+% \subsection{Critical Values}
+% % Is it possible to find critical values for this measure?
+% %  1) If so, how? (brief mention is adequate for now)
+% %  2) In what contexts are the values valid?
+% % =============================================================================
 
 \appendix
 
@@ -1881,7 +2959,8 @@ Some methods were omitted from the above list, yet still warrant a mention due t
 \textbf{Symbol} & \textbf{Comparison Method} \\ \hline
 $\rho$              & Pearson's rho \\ \hline
 $\rho_S$            & Spearman's rho \\ \hline
-$\tau_a$, $\tau_b$  & Kendall's Tau-a and -b \\ \hline
+$\tau_a$            & Kendall's Tau-a \\ \hline
+$\tau_b$            & Kendall's Tau-b \\ \hline
 $\tau_c$            & Stuart's Tau-c \\ \hline
 $\gamma$, G         & Goodman \& Kruskal's gamma\\ \hline
 $\kappa$            & Cohen's kappa \\ \hline
@@ -1909,12 +2988,32 @@ $D_E$               & Euclidean distance\\ \hline
 $D_M$               & Manhattan (taxicab) distance\\ \hline
 $T_v$               & Tversky index\\ \hline
 $p$                 & Fisher's exact test score (simple probabilty)\\ \hline
-$K_{SM}$            & Kilgarriff's simple maths\\ \hline
+$K_{\alpha}$        & Kilgarriff's simple maths (where $\alpha$ is the saturation parameter)\\ \hline
 %$ $                & \\ \hline
 \end{tabular}
 \caption{Symbols for each method}
 \label{tab:symbols}
 \end{table}
+
+
+
+\section{Comparison}
+\begin{landscape}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+
+% TODO
+
+\end{tabular}
+\caption{Symbols for each method}
+\label{tab:symbols}
+\end{table}
+
+\end{landscape}
+
+
 
 % 'The needless assumption of normality in Pearson's r' http://psycnet.apa.org/journals/amp/12/10/623/
 
