@@ -1,0 +1,191 @@
+
+
+
+
+\documentclass[11pt]{article}
+% Default margins are too wide all the way around. I reset them here
+\setlength{\topmargin}{-.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{.125in}
+\setlength{\textwidth}{6.25in}
+
+% Nicer paragraph style
+\setlength{\parskip}{\baselineskip}%
+\setlength{\parindent}{0pt}%
+
+% Font
+%\usepackage[urw-garamond]{mathdesign}
+%\usepackage[T1]{fontenc}
+
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{lscape}
+
+% Config
+\graphicspath{{./images/}}
+\hypersetup{
+    colorlinks=true,
+    bookmarks=true,
+    unicode=true,
+    linkcolor=black,
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black
+}
+
+\begin{document}
+
+
+
+\title{A Comparison Comparison:\\
+\small{for comparing how to compare comparable things}}
+\author{Stephen Wattam}
+\date{\today}
+\maketitle
+
+% Table of contents
+\tableofcontents{}
+\pagebreak
+
+
+
+
+% % =============================================================================
+% %                               <template>
+% % =============================================================================
+% \section{Template} %name of group of statistics
+% \subsection{Description}
+% % Describe the rationale behind the measure:
+% %  1) Who developed it, when?
+% %  2) Why? What field was it originally developed for?
+% %  3) To solve what problem?
+% 
+% \subsection{Properties}
+% \begin{tabular}{| l || l |}
+%     \hline
+%     {\bf Property} & {\bf Description} \\
+%     \hline
+%     % What values may the statistic take
+%     Limits & [-1, 1] \\ \hline
+% 
+%     % Is this method only valid under certain
+%     % distributional assumptions?
+%     Distributional Assumptions& 2 \\ \hline
+% 
+%     % What types of data may this run on?
+%     Data type & nominal, ordinal, interval, ratio \\ \hline
+% 
+%     % Is the method suitable for small frequencies?
+%     Low Frequency & 8 \\ \hline
+% 
+%     % Is the method suitable for nonsquare comparisons?
+%     Squareness Assumptions & 8 \\ \hline
+%     
+%     % Is the method symmetric?
+%     Symmetry? & Yes \\ \hline
+% 
+%     % Finally, any other assumptions
+%     % x & x \\ \hline
+% \end{tabular}
+% 
+% 
+% \subsection{Formula}
+% % How do we compute the statistic?
+% 
+% \subsection{Intrepretation}
+% % How to intrepret the output: what does it mean?
+% %  1) What range of values does it output?
+% %  2) In what circumstances does/can it hit extremis?
+% %  3) What does the number mean re. the data?
+% 
+% \subsection{Critical Values}
+% % Is it possible to find critical values for this measure?
+% %  1) If so, how? (brief mention is adequate for now)
+% %  2) In what contexts are the values valid?
+% % =============================================================================
+
+\appendix
+
+
+
+
+\section{Table of Symbols}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Symbol} & \textbf{Comparison Method} \\ \hline
+$\rho$              & Pearson's rho \\ \hline
+$\rho_S$            & Spearman's rho \\ \hline
+$\tau_a$            & Kendall's Tau-a \\ \hline
+$\tau_b$            & Kendall's Tau-b \\ \hline
+$\tau_c$            & Stuart's Tau-c \\ \hline
+$\gamma$, G         & Goodman \& Kruskal's gamma\\ \hline
+$\kappa$            & Cohen's kappa \\ \hline
+$\kappa_F$          & Fleiss' kappa \\ \hline
+$\lambda$           & Goodman \& Kruskal's lambda\\ \hline
+$U$                 & Theil's U/Uncertainty coefficient\\ \hline
+$\tau_{GK}$         & Goodman \& Kruskal's tau\\ \hline
+$D_{KL}$            & Kullback-Leibler divergence\\ \hline
+$D$                 & Somers' D\\ \hline
+$\eta$              & Eta \\ \hline
+$\chi^2$            & Pearson's chi-squared\\ \hline
+$\phi$              & Matthews correlation coefficient\\ \hline
+$V$                 & Cram\'er's V\\ \hline
+$CC$                & Contingency coefficient \\ \hline
+$OR$                & Odds ratio\\ \hline
+$\alpha$            & Cronbach's alpha\\ \hline
+$T$                 & Tschuprow's T\\ \hline
+$F_\beta$           & F-score (where $\beta$ is the weighting parameter)\\ \hline
+$U_{MW}$            & Mann-Whitney-Wilcoxon U\\ \hline
+$D_{KS}$            & Kolmogorov-Smirnov D\\ \hline
+$\Lambda$           & Likelihood ratio\\ \hline
+$cos$               & Cosine Similarity\\ \hline
+$D_\%$              & Percentage difference \\ \hline
+$D_E$               & Euclidean distance\\ \hline
+$D_M$               & Manhattan (taxicab) distance\\ \hline
+$T_v$               & Tversky index\\ \hline
+$p$                 & Fisher's exact test score (simple probabilty)\\ \hline
+$K_{\alpha}$        & Kilgarriff's simple maths (where $\alpha$ is the saturation parameter)\\ \hline
+%$ $                & \\ \hline
+\end{tabular}
+\caption{Symbols for each method}
+\label{tab:symbols}
+\end{table}
+
+
+
+\section{Comparison}
+\begin{landscape}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+\textbf{Symbol} & \textbf{Name} & \textbf{Rationale} & \textbf{Limits} & \textbf{Squareness?} & \textbf{Sensitivity} & \textbf{Low-Frequency?} & \textbf{Symmetric?} & \textbf{Formula} \\
+\hline
+
+% TODO
+
+\end{tabular}
+\caption{Symbols for each method}
+\label{tab:symbols}
+\end{table}
+
+\end{landscape}
+
+
+
+% 'The needless assumption of normality in Pearson's r' http://psycnet.apa.org/journals/amp/12/10/623/
+
+
+% =============================================================================
+% =============================================================================
+% =============================================================================
+
+% =============================================================================
+\bibliography{comparison}
+\bibliographystyle{plain}
+\end{document}
